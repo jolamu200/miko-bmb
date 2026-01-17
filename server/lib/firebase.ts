@@ -1,8 +1,7 @@
 import { auth, credential, initializeApp } from "firebase-admin";
+import { tsEnv } from "./typed-env";
 
-const serviceAccount = JSON.parse(
-    process.env.FIREBASE_SERVICE_ACCOUNT as string,
-);
+const serviceAccount = JSON.parse(tsEnv.FIREBASE_SERVICE_ACCOUNT);
 
 initializeApp({
     credential: credential.cert(serviceAccount),
