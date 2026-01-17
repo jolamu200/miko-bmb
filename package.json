@@ -18,18 +18,19 @@
     "dependencies": {
         "@tanstack/react-router": "^1.150.0",
         "@tanstack/react-router-devtools": "^1.150.0",
+        "firebase-admin": "^13.6.0",
         "hono": "^4.11.4",
         "react": "^19.2.0",
         "react-dom": "^19.2.0"
     },
     "devDependencies": {
-        "lefthook": "^2",
         "@tanstack/router-plugin": "^1.150.0",
         "@types/node": "^24.10.1",
         "@types/react": "^19.2.5",
         "@types/react-dom": "^19.2.3",
         "@vitejs/plugin-react": "^5.1.1",
         "babel-plugin-react-compiler": "^1.0.0",
+        "lefthook": "^2",
         "typescript": "~5.9.3",
         "vite": "^7.2.4",
         "vite-plugin-vercel": "^9.1.1",

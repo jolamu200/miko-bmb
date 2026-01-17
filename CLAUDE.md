@@ -17,7 +17,7 @@
 
 ### Component Patterns
 
-- **Radix for primitives** - accessible base components
+- **BaseUI for primitives** - [accessible base components](https://base-ui.com/react/overview/quick-start)
 - **JSDoc on components** - brief description on function
 
 ### Organization

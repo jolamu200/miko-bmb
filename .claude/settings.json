@@ -1,0 +1,10 @@
+{
+    "permissions": {
+        "deny": [
+            "Read(./.env*)",
+            "Read(./secrets/**)",
+            "Read(**/*.pem)",
+            "Edit(./config/critical.yaml)"
+        ]
+    }
+}
