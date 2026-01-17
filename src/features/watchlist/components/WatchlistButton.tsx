@@ -1,7 +1,7 @@
 import { Tooltip } from "@base-ui/react/tooltip";
 import { Icon } from "@iconify/react";
 import { tv } from "tailwind-variants";
-import { useUser } from "~/features/auth";
+import { useUser } from "~/features/auth/hooks/useAuth";
 import {
     useAddToWatchlist,
     useInWatchlist,

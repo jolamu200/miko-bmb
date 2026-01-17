@@ -1,12 +1,10 @@
 import { Icon } from "@iconify/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { useUser } from "~/features/auth";
-import {
-    useWatchlist,
-    WatchlistCard,
-    type WatchlistItem,
-} from "~/features/watchlist";
+import { useUser } from "~/features/auth/hooks/useAuth";
+import { WatchlistCard } from "~/features/watchlist/components/WatchlistCard";
+import { useWatchlist } from "~/features/watchlist/hooks/useWatchlist";
+import type { WatchlistItem } from "~/features/watchlist/types";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/watchlist")({

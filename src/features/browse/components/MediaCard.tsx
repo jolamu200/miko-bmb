@@ -1,7 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { WatchlistButton } from "~/features/watchlist";
+import { WatchlistButton } from "~/features/watchlist/components/WatchlistButton";
 import { posterCardStyles } from "~/ui/cardStyles";
 import type { MediaItem } from "../types";
 import { getPosterUrl, getReleaseYear, getTitle } from "../types";

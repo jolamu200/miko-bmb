@@ -1,6 +1,6 @@
 import { useQueries } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
-import type { MediaItem, TmdbListResponse } from "~/features/browse";
+import type { MediaItem, TmdbListResponse } from "~/features/browse/types";
 import { useHistory } from "./useHistory";
 
 const api = ofetch.create({ baseURL: "/api/tmdb" });

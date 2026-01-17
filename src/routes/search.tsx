@@ -1,7 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { tv } from "tailwind-variants";
-import { MediaGrid, SearchInput, useSearch } from "~/features/browse";
+import { MediaGrid } from "~/features/browse/components/MediaGrid";
+import { SearchInput } from "~/features/browse/components/SearchInput";
+import { useSearch } from "~/features/browse/hooks/useTmdb";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/search")({

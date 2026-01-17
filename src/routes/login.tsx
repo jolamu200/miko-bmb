@@ -1,7 +1,8 @@
 import { Icon } from "@iconify/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { GoogleButton, LoginForm } from "~/features/auth";
+import { GoogleButton } from "~/features/auth/components/GoogleButton";
+import { LoginForm } from "~/features/auth/components/LoginForm";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/login")({

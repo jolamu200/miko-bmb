@@ -1,12 +1,13 @@
 import { Icon } from "@iconify/react";
 import { createFileRoute } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
+import { MediaRow } from "~/features/browse/components/MediaRow";
 import {
-    MediaRow,
     useMovieDetail,
     useRecommendations,
-} from "~/features/browse";
-import { Player, PlayerHeader } from "~/features/stream";
+} from "~/features/browse/hooks/useTmdb";
+import { Player } from "~/features/stream/components/Player";
+import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/movie/$id")({

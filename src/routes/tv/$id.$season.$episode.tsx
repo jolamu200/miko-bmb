@@ -1,7 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getTitle, useSeasonDetail, useTvDetail } from "~/features/browse";
-import { EpisodeSelector, Player, PlayerHeader } from "~/features/stream";
+import { useSeasonDetail, useTvDetail } from "~/features/browse/hooks/useTmdb";
+import { getTitle } from "~/features/browse/types";
+import { EpisodeSelector } from "~/features/stream/components/EpisodeSelector";
+import { Player } from "~/features/stream/components/Player";
+import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/tv/$id/$season/$episode")({

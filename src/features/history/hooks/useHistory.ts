@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
-import { useUser } from "~/features/auth";
+import { useUser } from "~/features/auth/hooks/useAuth";
 import type { HistoryItem } from "../types";
 
 const api = ofetch.create({ baseURL: "/api/history" });

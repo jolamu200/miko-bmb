@@ -2,7 +2,7 @@ import { Menu } from "@base-ui/react/menu";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { useLogout, useUser } from "~/features/auth";
+import { useLogout, useUser } from "~/features/auth/hooks/useAuth";
 
 const styles = tv({
     slots: {

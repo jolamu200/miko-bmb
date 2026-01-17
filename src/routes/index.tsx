@@ -1,16 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useUser } from "~/features/auth";
+import { useUser } from "~/features/auth/hooks/useAuth";
+import { MediaRow } from "~/features/browse/components/MediaRow";
 import {
-    MediaRow,
     usePopularMovies,
     useTopRatedTv,
     useTrending,
-} from "~/features/browse";
+} from "~/features/browse/hooks/useTmdb";
+import { useForYou } from "~/features/history/hooks/useForYou";
 import {
-    useForYou,
     useHistory,
     useRemoveFromHistory,
-} from "~/features/history";
+} from "~/features/history/hooks/useHistory";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/")({

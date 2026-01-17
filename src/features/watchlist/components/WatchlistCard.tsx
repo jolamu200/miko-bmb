@@ -2,9 +2,10 @@ import { Tooltip } from "@base-ui/react/tooltip";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { getPosterUrl } from "~/features/browse";
+import { getPosterUrl } from "~/features/browse/types";
 import { posterCardStyles } from "~/ui/cardStyles";
-import { useRemoveFromWatchlist, type WatchlistItem } from "../index";
+import { useRemoveFromWatchlist } from "../hooks/useWatchlist";
+import type { WatchlistItem } from "../types";
 
 const styles = tv({
     extend: posterCardStyles,

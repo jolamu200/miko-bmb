@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { tv } from "tailwind-variants";
-import { useUser } from "~/features/auth";
-import { useAddToHistory } from "~/features/history";
+import { useUser } from "~/features/auth/hooks/useAuth";
+import { useAddToHistory } from "~/features/history/hooks/useHistory";
 import { streamer } from "../stream-lib";
 
 const styles = tv({

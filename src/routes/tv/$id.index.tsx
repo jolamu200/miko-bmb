@@ -1,14 +1,16 @@
 import { Icon } from "@iconify/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
+import { MediaRow } from "~/features/browse/components/MediaRow";
+import {
+    useRecommendations,
+    useTvDetail,
+} from "~/features/browse/hooks/useTmdb";
 import {
     getBackdropUrl,
     getPosterUrl,
     getTitle,
-    MediaRow,
-    useRecommendations,
-    useTvDetail,
-} from "~/features/browse";
+} from "~/features/browse/types";
 import { Button } from "~/ui/Button";
 
 export const Route = createFileRoute("/tv/$id/")({

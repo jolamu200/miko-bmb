@@ -2,7 +2,7 @@ import { Tabs } from "@base-ui/react/tabs";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import type { Episode, Season } from "~/features/browse";
+import type { Episode, Season } from "~/features/browse/types";
 
 const styles = tv({
     slots: {
