@@ -1,10 +1,11 @@
-import { auth, credential, initializeApp } from "firebase-admin";
+import admin from "firebase-admin";
 import { tsEnv } from "./typed-env";
 
 const serviceAccount = JSON.parse(tsEnv.FIREBASE_SERVICE_ACCOUNT);
 
-initializeApp({
-    credential: credential.cert(serviceAccount),
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
 });
 
-export const fireBaseAuth = auth();
+export const firebaseAuth = admin.auth();
+export const db = admin.firestore();

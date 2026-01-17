@@ -1,0 +1,46 @@
+import { tv, type VariantProps } from "tailwind-variants";
+
+const styles = tv({
+    slots: {
+        page: "min-h-screen bg-surface text-primary",
+        container: "mx-auto px-4",
+    },
+    variants: {
+        maxWidth: {
+            md: { container: "max-w-5xl" },
+            lg: { container: "max-w-7xl" },
+        },
+        padding: {
+            both: { container: "py-8" },
+            bottom: { container: "pb-8" },
+        },
+        spacing: {
+            none: {},
+            md: { container: "space-y-8" },
+        },
+    },
+    defaultVariants: {
+        maxWidth: "lg",
+        padding: "both",
+        spacing: "none",
+    },
+});
+
+type PageLayoutProps = VariantProps<typeof styles> & {
+    children: React.ReactNode;
+};
+
+/** Standard page wrapper with surface background and centered container */
+export function PageLayout({
+    children,
+    maxWidth,
+    padding,
+    spacing,
+}: PageLayoutProps) {
+    const { page, container } = styles({ maxWidth, padding, spacing });
+    return (
+        <div className={page()}>
+            <div className={container()}>{children}</div>
+        </div>
+    );
+}

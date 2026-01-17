@@ -4,6 +4,7 @@ import { type } from "arktype";
 const schema = type({
     FIREBASE_SERVICE_ACCOUNT: "string.json",
     TMDB_TOKEN: "string > 1",
+    FIREBASE_API_KEY: "string > 1",
 });
 
 export const tsEnv = schema.assert(process.env);
