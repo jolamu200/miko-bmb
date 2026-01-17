@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { authRoutes } from "./routes/auth";
+import { historyRoutes } from "./routes/history";
 import { tmdbRoutes } from "./routes/tmdb";
 import { watchlistRoutes } from "./routes/watchlist";
 
@@ -13,7 +14,8 @@ const app = new Hono()
     })
     .route("/auth", authRoutes)
     .route("/tmdb", tmdbRoutes)
-    .route("/watchlist", watchlistRoutes);
+    .route("/watchlist", watchlistRoutes)
+    .route("/history", historyRoutes);
 
 export default app;
 

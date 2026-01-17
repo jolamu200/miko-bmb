@@ -2,8 +2,8 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const styles = tv({
     slots: {
-        page: "min-h-screen bg-surface text-primary",
-        container: "mx-auto px-4",
+        page: "min-h-screen text-primary",
+        container: "mx-auto px-4 sm:px-6",
     },
     variants: {
         maxWidth: {

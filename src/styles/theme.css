@@ -1,19 +1,41 @@
 @import "tailwindcss";
 
 @theme {
-    --color-surface: #0a0a0a;
-    --color-surface-raised: #141414;
-    --color-surface-overlay: #1a1a1a;
-    --color-accent: #e50914;
-    --color-accent-hover: #f40612;
-    --color-primary: #ffffff;
-    --color-muted: #808080;
-    --color-border: #2a2a2a;
+    /* Luxury black background */
+    --color-surface: #050505;
+    --color-surface-raised: rgba(255, 255, 255, 0.04);
+    --color-surface-overlay: rgba(255, 255, 255, 0.06);
 
-    --radius-card: 0.5rem;
-    --radius-button: 0.25rem;
+    /* Premium gold accent */
+    --color-accent: #d4af37;
+    --color-accent-hover: #e6c458;
+
+    /* Text */
+    --color-primary: #fafafa;
+    --color-muted: #737373;
+    --color-border: rgba(255, 255, 255, 0.08);
+
+    /* Glass effect colors - subtle for luxury feel */
+    --color-glass: rgba(255, 255, 255, 0.02);
+    --color-glass-border: rgba(255, 255, 255, 0.06);
+    --color-glass-highlight: rgba(255, 255, 255, 0.1);
+
+    /* Larger radius for modern glass look */
+    --radius-card: 1rem;
+    --radius-button: 0.75rem;
 
     --font-sans: "Sora", system-ui, sans-serif;
+
+    /* Animation timing */
+    --ease-luxury: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Luxury black gradient background */
+body {
+    background: linear-gradient(145deg, #000000 0%, #0a0a0a 50%, #050505 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
 }
 
 @utility scrollbar-hide {
@@ -22,4 +44,133 @@
     &::-webkit-scrollbar {
         display: none;
     }
+}
+
+@utility glass {
+    background: var(--color-glass);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--color-glass-border);
+}
+
+@utility glass-strong {
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid var(--color-glass-border);
+}
+
+@utility glow-accent {
+    box-shadow: 0 0 30px rgba(212, 175, 55, 0.25);
+}
+
+@utility glow-soft {
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
+}
+
+/* Animation keyframes */
+@keyframes fade-in {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fade-up {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse-glow {
+    0%,
+    100% {
+        box-shadow: 0 0 20px rgba(212, 175, 55, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+    }
+}
+
+@keyframes float {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-4px);
+    }
+}
+
+@keyframes icon-bounce {
+    0%,
+    100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+/* Animation utilities */
+@utility animate-fade-in {
+    animation: fade-in 0.4s var(--ease-luxury) forwards;
+}
+
+@utility animate-fade-up {
+    animation: fade-up 0.5s var(--ease-luxury) forwards;
+}
+
+@utility animate-scale-in {
+    animation: scale-in 0.3s var(--ease-luxury) forwards;
+}
+
+@utility animate-shimmer {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.08),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: shimmer 2s infinite;
+}
+
+@utility animate-pulse-glow {
+    animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+@utility animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+@utility animate-icon-bounce {
+    animation: icon-bounce 0.4s var(--ease-bounce);
 }

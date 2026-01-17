@@ -2,10 +2,9 @@ import { Icon } from "@iconify/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
 import { useUser } from "~/features/auth";
-import { getPosterUrl } from "~/features/browse";
 import {
-    useRemoveFromWatchlist,
     useWatchlist,
+    WatchlistCard,
     type WatchlistItem,
 } from "~/features/watchlist";
 import { PageLayout } from "~/ui/PageLayout";
@@ -16,43 +15,50 @@ export const Route = createFileRoute("/watchlist")({
 
 const styles = tv({
     slots: {
-        title: "text-2xl font-bold mb-6",
-        grid: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4",
-        card: "group relative overflow-hidden rounded-card bg-surface-raised",
-        poster: "aspect-2/3 w-full object-cover",
-        removeButton:
-            "absolute top-2 right-2 p-2 rounded-full bg-red-500 text-white opacity-0 group-hover:opacity-100 transition-opacity",
-        info: "p-3",
-        itemTitle: "text-sm font-medium line-clamp-1",
-        itemMeta: "text-xs text-muted mt-1",
-        empty: "text-center text-muted py-12",
-        loginPrompt: "text-center py-12",
+        header: "flex items-center gap-3 mb-8",
+        headerIcon: "size-8 text-accent",
+        title: "text-2xl font-bold",
+        count: "text-sm text-muted ml-2",
+        grid: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-5",
+        empty: "text-center text-muted py-16 glass rounded-3xl animate-fade-in",
+        emptyIcon: "size-16 text-muted/30 mx-auto mb-4",
+        loginPrompt: "text-center py-16 glass rounded-3xl animate-fade-in",
+        loginIcon: "size-16 text-accent/50 mx-auto mb-4",
     },
 });
 
 function WatchlistPage() {
     const {
+        header,
+        headerIcon,
         title,
+        count,
         grid,
-        card,
-        poster,
-        removeButton,
-        info,
-        itemTitle,
-        itemMeta,
         empty,
+        emptyIcon,
         loginPrompt,
+        loginIcon,
     } = styles();
 
     const { data: user, isLoading: userLoading } = useUser();
     const { data: items, isLoading } = useWatchlist();
-    const removeFromWatchlist = useRemoveFromWatchlist();
 
     if (userLoading) {
         return (
             <PageLayout>
-                <h1 className={title()}>My Watchlist</h1>
-                <div className={empty()}>Loading...</div>
+                <div className={header()}>
+                    <Icon
+                        icon="mdi:bookmark-multiple"
+                        className={headerIcon()}
+                    />
+                    <h1 className={title()}>My Watchlist</h1>
+                </div>
+                <div className={empty()}>
+                    <Icon
+                        icon="mdi:loading"
+                        className="size-8 animate-spin mx-auto"
+                    />
+                </div>
             </PageLayout>
         );
     }
@@ -60,12 +66,23 @@ function WatchlistPage() {
     if (!user) {
         return (
             <PageLayout>
-                <h1 className={title()}>My Watchlist</h1>
+                <div className={header()}>
+                    <Icon
+                        icon="mdi:bookmark-multiple"
+                        className={headerIcon()}
+                    />
+                    <h1 className={title()}>My Watchlist</h1>
+                </div>
                 <div className={loginPrompt()}>
+                    <Icon icon="mdi:account-lock" className={loginIcon()} />
                     <p className="text-muted mb-4">
                         Sign in to save movies and shows to your watchlist
                     </p>
-                    <Link to="/login" className="text-accent hover:underline">
+                    <Link
+                        to="/login"
+                        className="inline-flex items-center gap-2 text-accent hover:text-accent-hover transition-colors"
+                    >
+                        <Icon icon="mdi:login" className="size-5" />
                         Sign In
                     </Link>
                 </div>
@@ -75,57 +92,42 @@ function WatchlistPage() {
 
     return (
         <PageLayout>
-            <h1 className={title()}>My Watchlist</h1>
+            <div className={header()}>
+                <Icon icon="mdi:bookmark-multiple" className={headerIcon()} />
+                <h1 className={title()}>My Watchlist</h1>
+                {items?.length ? (
+                    <span className={count()}>
+                        ({items.length}{" "}
+                        {items.length === 1 ? "title" : "titles"})
+                    </span>
+                ) : null}
+            </div>
 
             {isLoading ? (
-                <div className={empty()}>Loading...</div>
+                <div className={empty()}>
+                    <Icon
+                        icon="mdi:loading"
+                        className="size-8 animate-spin mx-auto"
+                    />
+                </div>
             ) : !items?.length ? (
                 <div className={empty()}>
-                    Your watchlist is empty. Browse and add some titles!
+                    <Icon
+                        icon="mdi:bookmark-off-outline"
+                        className={emptyIcon()}
+                    />
+                    <p className="mb-2">Your watchlist is empty</p>
+                    <p className="text-sm">
+                        Browse and add some titles to get started!
+                    </p>
                 </div>
             ) : (
                 <div className={grid()}>
                     {items.map((item: WatchlistItem) => (
-                        <div
+                        <WatchlistCard
                             key={`${item.mediaType}-${item.id}`}
-                            className={card()}
-                        >
-                            <Link
-                                to={
-                                    item.mediaType === "movie"
-                                        ? "/movie/$id"
-                                        : "/tv/$id"
-                                }
-                                params={{ id: String(item.id) }}
-                            >
-                                <img
-                                    src={getPosterUrl(item.posterPath)}
-                                    alt={item.title}
-                                    className={poster()}
-                                    loading="lazy"
-                                />
-                            </Link>
-                            <button
-                                type="button"
-                                className={removeButton()}
-                                onClick={() =>
-                                    removeFromWatchlist.mutate({
-                                        mediaType: item.mediaType,
-                                        id: item.id,
-                                    })
-                                }
-                            >
-                                <Icon icon="mdi:close" className="size-4" />
-                            </button>
-                            <div className={info()}>
-                                <p className={itemTitle()}>{item.title}</p>
-                                <p className={itemMeta()}>
-                                    {item.mediaType === "movie"
-                                        ? "Movie"
-                                        : "TV Show"}
-                                </p>
-                            </div>
-                        </div>
+                            item={item}
+                        />
                     ))}
                 </div>
             )}

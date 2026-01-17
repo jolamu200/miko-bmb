@@ -12,21 +12,20 @@ export function useWatchlist() {
     return useQuery({
         queryKey: ["watchlist"],
         queryFn: () => api<WatchlistItem[]>("/"),
-        retry: false,
         enabled: !!user,
     });
 }
 
-/** Check if item is in watchlist (uses cached watchlist data) */
+/** Check if item is in watchlist (derived from cached watchlist) */
 export function useInWatchlist(mediaType: "movie" | "tv", id: number) {
-    const { data: watchlist } = useWatchlist();
+    const { data: watchlist, isLoading } = useWatchlist();
 
     const inWatchlist =
         watchlist?.some(
             (item) => item.mediaType === mediaType && item.id === id,
         ) ?? false;
 
-    return { data: { inWatchlist }, isLoading: false };
+    return { inWatchlist, isLoading };
 }
 
 /** Add item to watchlist */
@@ -35,11 +34,10 @@ export function useAddToWatchlist() {
 
     return useMutation({
         mutationFn: (item: Omit<WatchlistItem, "addedAt">) =>
-            api("/", { method: "POST", body: item }),
-        onSuccess: (_, item) => {
-            // Optimistically add to cached watchlist
+            api<WatchlistItem>("/", { method: "POST", body: item }),
+        onSuccess: (newItem) => {
             queryClient.setQueryData<WatchlistItem[]>(["watchlist"], (old) => [
-                { ...item, addedAt: Date.now() },
+                newItem,
                 ...(old ?? []),
             ]);
         },
@@ -59,7 +57,6 @@ export function useRemoveFromWatchlist() {
             id: number;
         }) => api(`/${mediaType}/${id}`, { method: "DELETE" }),
         onSuccess: (_, { mediaType, id }) => {
-            // Optimistically remove from cached watchlist
             queryClient.setQueryData<WatchlistItem[]>(["watchlist"], (old) =>
                 old?.filter(
                     (item) => !(item.mediaType === mediaType && item.id === id),

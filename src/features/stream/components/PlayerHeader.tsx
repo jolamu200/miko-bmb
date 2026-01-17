@@ -5,11 +5,11 @@ import { Button } from "~/ui/Button";
 
 const styles = tv({
     slots: {
-        root: "flex items-center justify-between py-4",
+        root: "flex items-center justify-between py-5 animate-fade-in",
         left: "flex items-center gap-4",
-        title: "text-lg font-medium text-primary",
-        subtitle: "text-sm text-muted",
-        actions: "flex items-center gap-2",
+        info: "space-y-1",
+        title: "text-xl font-semibold text-primary flex items-center gap-2",
+        subtitle: "text-sm text-muted flex items-center gap-2",
     },
 });
 
@@ -25,27 +25,35 @@ export function PlayerHeader({
     subtitle: playerSubtitle,
     backHref,
 }: PlayerHeaderProps) {
-    const { root, left, title, subtitle, actions } = styles();
+    const { root, left, info, title, subtitle } = styles();
 
     return (
         <div className={root()}>
             <div className={left()}>
                 <Link to={backHref}>
-                    <Button variant="ghost" size="sm">
+                    <Button variant="secondary" size="sm">
                         <Icon icon="mdi:arrow-left" className="size-5" />
+                        Back
                     </Button>
                 </Link>
-                <div>
-                    <h1 className={title()}>{playerTitle}</h1>
+                <div className={info()}>
+                    <h1 className={title()}>
+                        <Icon
+                            icon="mdi:movie-open-play"
+                            className="size-5 text-accent"
+                        />
+                        {playerTitle}
+                    </h1>
                     {playerSubtitle && (
-                        <p className={subtitle()}>{playerSubtitle}</p>
+                        <p className={subtitle()}>
+                            <Icon
+                                icon="mdi:television-play"
+                                className="size-4"
+                            />
+                            {playerSubtitle}
+                        </p>
                     )}
                 </div>
-            </div>
-            <div className={actions()}>
-                <Button variant="ghost" size="sm">
-                    <Icon icon="mdi:bookmark-outline" className="size-5" />
-                </Button>
             </div>
         </div>
     );

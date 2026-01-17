@@ -58,7 +58,7 @@ export const watchlistRoutes = new Hono<{ Variables: Variables }>()
         };
 
         await getWatchlistRef(uid).doc(docId).set(item);
-        return c.json({ ok: true });
+        return c.json(item);
     })
 
     // Remove from watchlist

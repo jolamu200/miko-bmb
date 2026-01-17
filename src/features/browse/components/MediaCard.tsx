@@ -2,61 +2,93 @@ import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
 import { WatchlistButton } from "~/features/watchlist";
+import { posterCardStyles } from "~/ui/cardStyles";
 import type { MediaItem } from "../types";
 import { getPosterUrl, getReleaseYear, getTitle } from "../types";
 
 const styles = tv({
+    extend: posterCardStyles,
     slots: {
-        card: "group relative overflow-hidden rounded-card bg-surface-raised transition-transform hover:scale-105",
-        poster: "aspect-2/3 w-full object-cover",
-        overlay:
-            "absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity",
+        card: "cursor-pointer",
+        ratingIcon: "text-accent",
+        ratingValue: "text-primary",
         actions:
-            "absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity",
-        content:
-            "absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform",
-        title: "text-sm font-medium text-primary line-clamp-1",
-        meta: "flex items-center gap-2 text-xs text-muted mt-1",
+            "absolute bottom-16 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0",
+        removeButton:
+            "p-2.5 rounded-full bg-black/50 text-muted hover:text-red-400 hover:bg-black/70 ring-1 ring-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95",
+        removeIcon: "size-5",
     },
 });
 
 type MediaCardProps = {
     item: MediaItem;
     mediaType?: "movie" | "tv";
+    onRemove?: () => void;
 };
 
 /** Poster card for movie or TV show */
-export function MediaCard({ item, mediaType }: MediaCardProps) {
+export function MediaCard({ item, mediaType, onRemove }: MediaCardProps) {
     const type = mediaType || item.media_type || "movie";
     const href = type === "movie" ? `/movie/${item.id}` : `/tv/${item.id}`;
-    const { card, poster, overlay, actions, content, title, meta } = styles();
+    const s = styles();
     const itemTitle = getTitle(item);
+    const year = getReleaseYear(item);
+    const rating = item.vote_average?.toFixed(1) || "N/A";
 
     return (
-        <Link to={href} className={card()}>
-            <img
-                src={getPosterUrl(item.poster_path)}
-                alt={itemTitle}
-                className={poster()}
-                loading="lazy"
-            />
-            <div className={overlay()} />
-            <div className={actions()}>
-                <WatchlistButton
-                    id={item.id}
-                    mediaType={type}
-                    title={itemTitle}
-                    posterPath={item.poster_path}
+        <Link to={href} className={s.card()}>
+            <div className={s.imageWrapper()}>
+                <img
+                    src={getPosterUrl(item.poster_path)}
+                    alt={itemTitle}
+                    className={s.poster()}
+                    loading="lazy"
                 />
-            </div>
-            <div className={content()}>
-                <h3 className={title()}>{itemTitle}</h3>
-                <div className={meta()}>
-                    <span>{getReleaseYear(item)}</span>
-                    <span className="flex items-center gap-0.5">
-                        <Icon icon="mdi:star" className="text-yellow-500" />
-                        {item.vote_average.toFixed(1)}
-                    </span>
+                <div className={s.gradientOverlay()} />
+                <div className={s.shine()} />
+
+                <div className={s.badge()}>
+                    <Icon
+                        icon="mdi:star"
+                        className={`${s.badgeIcon()} ${s.ratingIcon()}`}
+                    />
+                    <span className={s.ratingValue()}>{rating}</span>
+                </div>
+
+                <div className={s.playButton()}>
+                    <Icon icon="mdi:play" className={s.playIcon()} />
+                </div>
+
+                <div className={s.actions()}>
+                    {onRemove && (
+                        <button
+                            type="button"
+                            className={s.removeButton()}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                onRemove();
+                            }}
+                            aria-label="Remove from history"
+                        >
+                            <Icon icon="mdi:close" className={s.removeIcon()} />
+                        </button>
+                    )}
+                    <WatchlistButton
+                        id={item.id}
+                        mediaType={type}
+                        title={itemTitle}
+                        posterPath={item.poster_path}
+                    />
+                </div>
+
+                <div className={s.content()}>
+                    <h3 className={s.title()}>{itemTitle}</h3>
+                    <div className={s.meta()}>
+                        <span>{year}</span>
+                        <span className={s.metaDot()} />
+                        <span>{type === "movie" ? "Movie" : "Series"}</span>
+                    </div>
                 </div>
             </div>
         </Link>

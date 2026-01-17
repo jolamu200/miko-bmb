@@ -10,7 +10,6 @@ export function useUser() {
         queryKey: ["auth", "user"],
         queryFn: () => api<User>("/me"),
         retry: false,
-        staleTime: 1000 * 60 * 5,
     });
 }
 
@@ -53,10 +52,9 @@ export function useLogout() {
     return useMutation({
         mutationFn: () => api("/logout", { method: "POST" }),
         onSuccess: () => {
-            // Clear user data
             queryClient.setQueryData(["auth", "user"], null);
-            // Clear user-specific cache (watchlist, etc.)
             queryClient.removeQueries({ queryKey: ["watchlist"] });
+            queryClient.removeQueries({ queryKey: ["history"] });
         },
     });
 }

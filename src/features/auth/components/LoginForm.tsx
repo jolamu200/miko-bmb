@@ -1,3 +1,4 @@
+import { Toggle } from "@base-ui/react/toggle";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 import { tv } from "tailwind-variants";
@@ -8,12 +9,16 @@ import { useLogin, useRegister } from "../hooks/useAuth";
 const styles = tv({
     slots: {
         form: "space-y-4",
-        error: "text-sm text-red-500 text-center",
+        inputWrapper: "relative",
+        inputIcon:
+            "absolute left-3 top-1/2 -translate-y-1/2 text-muted size-5 pointer-events-none",
+        error: "text-sm text-red-400 text-center flex items-center justify-center gap-2",
         toggle: "text-sm text-center text-muted",
-        toggleButton: "text-accent hover:underline cursor-pointer",
+        toggleButton:
+            "text-accent hover:text-accent-hover hover:underline cursor-pointer transition-colors ml-1",
         passwordWrapper: "relative",
         passwordToggle:
-            "absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-colors",
+            "absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-all duration-200 cursor-pointer outline-none focus-visible:text-primary",
     },
 });
 
@@ -25,6 +30,8 @@ type LoginFormProps = {
 export function LoginForm({ onSuccess }: LoginFormProps) {
     const {
         form,
+        inputWrapper,
+        inputIcon,
         error: errorStyle,
         toggle,
         toggleButton,
@@ -64,43 +71,77 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className={form()}>
-            <Input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={setEmail}
-            />
-            <div className={passwordWrapper()}>
+            <div className={inputWrapper()}>
+                <Icon icon="mdi:email-outline" className={inputIcon()} />
                 <Input
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Password"
-                    value={password}
-                    onChange={setPassword}
+                    type="email"
+                    placeholder="Email address"
+                    value={email}
+                    onChange={setEmail}
                 />
-                <button
-                    type="button"
+            </div>
+            <div className={passwordWrapper()}>
+                <div className={inputWrapper()}>
+                    <Icon icon="mdi:lock-outline" className={inputIcon()} />
+                    <Input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Password"
+                        value={password}
+                        onChange={setPassword}
+                    />
+                </div>
+                <Toggle
+                    pressed={showPassword}
+                    onPressedChange={setShowPassword}
                     className={passwordToggle()}
-                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={
+                        showPassword ? "Hide password" : "Show password"
+                    }
                 >
                     <Icon
-                        icon={showPassword ? "mdi:eye-off" : "mdi:eye"}
+                        icon={
+                            showPassword
+                                ? "mdi:eye-off-outline"
+                                : "mdi:eye-outline"
+                        }
                         className="size-5"
                     />
-                </button>
+                </Toggle>
             </div>
 
-            {errorMessage && <p className={errorStyle()}>{errorMessage}</p>}
+            {errorMessage && (
+                <p className={errorStyle()}>
+                    <Icon icon="mdi:alert-circle-outline" className="size-4" />
+                    {errorMessage}
+                </p>
+            )}
 
             <Button type="submit" disabled={isLoading}>
-                {isLoading
-                    ? "Loading..."
-                    : isRegister
-                      ? "Create Account"
-                      : "Sign In"}
+                {isLoading ? (
+                    <>
+                        <Icon
+                            icon="mdi:loading"
+                            className="size-5 animate-spin"
+                        />
+                        Please wait...
+                    </>
+                ) : isRegister ? (
+                    <>
+                        <Icon icon="mdi:account-plus" className="size-5" />
+                        Create Account
+                    </>
+                ) : (
+                    <>
+                        <Icon icon="mdi:login" className="size-5" />
+                        Sign In
+                    </>
+                )}
             </Button>
 
             <p className={toggle()}>
-                {isRegister ? "Already have an account? " : "New here? "}
+                {isRegister
+                    ? "Already have an account?"
+                    : "Don't have an account?"}
                 <button
                     type="button"
                     className={toggleButton()}

@@ -39,6 +39,8 @@ function TvEpisodePage() {
             <Player
                 mediaType="tv"
                 tmdbId={id}
+                title={showTitle}
+                posterPath={show?.poster_path ?? null}
                 season={seasonNum}
                 episode={episodeNum}
             />

@@ -4,9 +4,9 @@ import { tv } from "tailwind-variants";
 
 const styles = tv({
     slots: {
-        root: "relative",
-        input: "w-full bg-surface-raised text-primary placeholder:text-muted border border-border rounded-button pl-10 pr-4 h-10 outline-none focus:border-accent transition-colors",
-        icon: "absolute left-3 top-1/2 -translate-y-1/2 text-muted size-5",
+        root: "relative group",
+        input: "w-full glass text-primary placeholder:text-muted/50 rounded-button pl-11 pr-4 h-12 outline-none focus:bg-white/6 focus:border-accent/40 focus:ring-1 focus:ring-accent/20 transition-all duration-300",
+        icon: "absolute left-3.5 top-1/2 -translate-y-1/2 text-muted size-5 transition-colors duration-300 group-focus-within:text-accent",
     },
 });
 
@@ -43,13 +43,14 @@ export function SearchInput({
 
     return (
         <div className={root()}>
-            <Icon icon="mdi:magnify" className={icon()} />
+            <Icon icon="mdi:magnify" className={icon()} aria-hidden="true" />
             <input
                 type="text"
                 className={input()}
                 placeholder={placeholder}
                 value={localValue}
                 onChange={(e) => setLocalValue(e.target.value)}
+                aria-label="Search"
             />
         </div>
     );

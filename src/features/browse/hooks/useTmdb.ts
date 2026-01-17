@@ -13,7 +13,6 @@ const api = ofetch.create({ baseURL: "/api/tmdb" });
 const STALE_TIME = {
     list: 1000 * 60 * 10, // 10 minutes for lists
     detail: 1000 * 60 * 30, // 30 minutes for details
-    search: 1000 * 60 * 5, // 5 minutes for search
 };
 
 export function useTrending(
@@ -89,7 +88,6 @@ export function useSearch(query: string) {
                 query: { query },
             }),
         enabled: query.length >= 2,
-        staleTime: STALE_TIME.search,
     });
 }
 
