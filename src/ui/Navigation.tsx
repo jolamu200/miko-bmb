@@ -63,6 +63,16 @@ export function Navigation() {
                         Search
                     </Link>
 
+                    {user && (
+                        <Link to="/watchlist" className={link()}>
+                            <Icon
+                                icon="mdi:bookmark-outline"
+                                className="size-5"
+                            />
+                            Watchlist
+                        </Link>
+                    )}
+
                     {!isLoading && !user && (
                         <Link to="/login" className={link()}>
                             <Icon icon="mdi:account" className="size-5" />

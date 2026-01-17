@@ -1,3 +1,4 @@
+import { styleText } from "node:util";
 import admin from "firebase-admin";
 import { tsEnv } from "./typed-env";
 
@@ -9,3 +10,5 @@ admin.initializeApp({
 
 export const firebaseAuth = admin.auth();
 export const db = admin.firestore();
+
+console.log(styleText("yellow", "OK : Firebase Initialised"));

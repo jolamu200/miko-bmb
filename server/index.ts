@@ -1,7 +1,7 @@
 import { Hono } from "hono";
-import "./lib/typed-env";
 import { authRoutes } from "./routes/auth";
 import { tmdbRoutes } from "./routes/tmdb";
+import { watchlistRoutes } from "./routes/watchlist";
 
 const app = new Hono()
     .basePath("/api")
@@ -12,7 +12,8 @@ const app = new Hono()
         });
     })
     .route("/auth", authRoutes)
-    .route("/tmdb", tmdbRoutes);
+    .route("/tmdb", tmdbRoutes)
+    .route("/watchlist", watchlistRoutes);
 
 export default app;
 

@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
+import { WatchlistButton } from "~/features/watchlist";
 import type { MediaItem } from "../types";
 import { getPosterUrl, getReleaseYear, getTitle } from "../types";
 
@@ -10,6 +11,8 @@ const styles = tv({
         poster: "aspect-2/3 w-full object-cover",
         overlay:
             "absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity",
+        actions:
+            "absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity",
         content:
             "absolute bottom-0 left-0 right-0 p-3 translate-y-full group-hover:translate-y-0 transition-transform",
         title: "text-sm font-medium text-primary line-clamp-1",
@@ -26,19 +29,28 @@ type MediaCardProps = {
 export function MediaCard({ item, mediaType }: MediaCardProps) {
     const type = mediaType || item.media_type || "movie";
     const href = type === "movie" ? `/movie/${item.id}` : `/tv/${item.id}`;
-    const { card, poster, overlay, content, title, meta } = styles();
+    const { card, poster, overlay, actions, content, title, meta } = styles();
+    const itemTitle = getTitle(item);
 
     return (
         <Link to={href} className={card()}>
             <img
                 src={getPosterUrl(item.poster_path)}
-                alt={getTitle(item)}
+                alt={itemTitle}
                 className={poster()}
                 loading="lazy"
             />
             <div className={overlay()} />
+            <div className={actions()}>
+                <WatchlistButton
+                    id={item.id}
+                    mediaType={type}
+                    title={itemTitle}
+                    posterPath={item.poster_path}
+                />
+            </div>
             <div className={content()}>
-                <h3 className={title()}>{getTitle(item)}</h3>
+                <h3 className={title()}>{itemTitle}</h3>
                 <div className={meta()}>
                     <span>{getReleaseYear(item)}</span>
                     <span className="flex items-center gap-0.5">

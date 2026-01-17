@@ -10,6 +10,12 @@ import type {
 
 const api = ofetch.create({ baseURL: "/api/tmdb" });
 
+const STALE_TIME = {
+    list: 1000 * 60 * 10, // 10 minutes for lists
+    detail: 1000 * 60 * 30, // 30 minutes for details
+    search: 1000 * 60 * 5, // 5 minutes for search
+};
+
 export function useTrending(
     mediaType: "all" | "movie" | "tv" = "all",
     timeWindow: "day" | "week" = "day",
@@ -20,6 +26,7 @@ export function useTrending(
             api<TmdbListResponse<MediaItem>>(
                 `/trending/${mediaType}/${timeWindow}`,
             ),
+        staleTime: STALE_TIME.list,
     });
 }
 
@@ -30,6 +37,7 @@ export function usePopularMovies(page = 1) {
             api<TmdbListResponse<MediaItem>>("/movie/popular", {
                 query: { page },
             }),
+        staleTime: STALE_TIME.list,
     });
 }
 
@@ -40,6 +48,7 @@ export function useTopRatedTv(page = 1) {
             api<TmdbListResponse<MediaItem>>("/tv/top_rated", {
                 query: { page },
             }),
+        staleTime: STALE_TIME.list,
     });
 }
 
@@ -48,6 +57,7 @@ export function useMovieDetail(id: string) {
         queryKey: ["tmdb", "movie", id],
         queryFn: () => api<MovieDetail>(`/movie/${id}`),
         enabled: !!id,
+        staleTime: STALE_TIME.detail,
     });
 }
 
@@ -56,6 +66,7 @@ export function useTvDetail(id: string) {
         queryKey: ["tmdb", "tv", id],
         queryFn: () => api<TvDetail>(`/tv/${id}`),
         enabled: !!id,
+        staleTime: STALE_TIME.detail,
     });
 }
 
@@ -64,6 +75,7 @@ export function useSeasonDetail(tvId: string, seasonNumber: number) {
         queryKey: ["tmdb", "tv", tvId, "season", seasonNumber],
         queryFn: () => api<SeasonDetail>(`/tv/${tvId}/season/${seasonNumber}`),
         enabled: !!tvId && seasonNumber >= 0,
+        staleTime: STALE_TIME.detail,
         // Keep previous data while fetching to prevent layout shift
         placeholderData: (prev) => prev,
     });
@@ -77,6 +89,7 @@ export function useSearch(query: string) {
                 query: { query },
             }),
         enabled: query.length >= 2,
+        staleTime: STALE_TIME.search,
     });
 }
 
@@ -88,6 +101,7 @@ export function useRecommendations(mediaType: "movie" | "tv", id: string) {
                 `/${mediaType}/${id}/recommendations`,
             ),
         enabled: !!id,
+        staleTime: STALE_TIME.list,
     });
 }
 
@@ -98,5 +112,6 @@ export function useDiscover(mediaType: "movie" | "tv", genreId?: number) {
             api<TmdbListResponse<MediaItem>>(`/discover/${mediaType}`, {
                 query: genreId ? { with_genres: genreId } : {},
             }),
+        staleTime: STALE_TIME.list,
     });
 }

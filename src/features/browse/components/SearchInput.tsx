@@ -1,5 +1,5 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { tv } from "tailwind-variants";
 
 const styles = tv({
@@ -26,14 +26,16 @@ export function SearchInput({
 }: SearchInputProps) {
     const { root, input, icon } = styles();
     const [localValue, setLocalValue] = useState(value);
+    const onChangeRef = useRef(onChange);
+    onChangeRef.current = onChange;
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            onChange(localValue);
+            onChangeRef.current(localValue);
         }, debounceMs);
 
         return () => clearTimeout(timer);
-    }, [localValue, debounceMs, onChange]);
+    }, [localValue, debounceMs]);
 
     useEffect(() => {
         setLocalValue(value);
