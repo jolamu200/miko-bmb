@@ -1,6 +1,6 @@
 import { hc } from "hono/client";
 import { useState } from "react";
-import type { RPC } from "~api/app";
+import type { RPC } from "~api/index";
 
 const client = hc<RPC>("/");
 
