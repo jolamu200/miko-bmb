@@ -3,6 +3,7 @@ import {
     useRecommendations,
     useTvDetail,
 } from "~/features/browse/browse.hooks";
+import { DetailMeta } from "~/features/browse/components/DetailMeta";
 import { MediaRow } from "~/features/browse/components/MediaRow";
 import { SeasonCard } from "~/features/browse/components/SeasonCard";
 import {
@@ -14,7 +15,6 @@ import { Button } from "~/ui/Button";
 import { CardGrid } from "~/ui/CardGrid";
 import { HeroLayout } from "~/ui/HeroLayout";
 import { MediaHeader } from "~/ui/MediaHeader";
-import { MediaMeta } from "~/ui/MediaMeta";
 import { OverviewCard } from "~/ui/OverviewCard";
 import { SectionHeader } from "~/ui/SectionHeader";
 import { Stack } from "~/ui/Stack";
@@ -42,29 +42,13 @@ function TvShowPage() {
     const filteredSeasons =
         show.seasons?.filter((s) => s.season_number > 0) ?? [];
 
-    const metaItems = [
-        show.first_air_date && {
-            icon: "mdi:calendar",
-            label: new Date(show.first_air_date).getFullYear().toString(),
-        },
-        {
-            icon: "mdi:folder-multiple",
-            label: `${show.number_of_seasons} Seasons`,
-        },
-        show.vote_average && {
-            icon: "mdi:star",
-            label: show.vote_average.toFixed(1),
-            highlight: true,
-        },
-    ].filter(Boolean) as { icon: string; label: string; highlight?: boolean }[];
-
     return (
         <HeroLayout backdropUrl={getBackdropUrl(show.backdrop_path)}>
             <Stack gap="lg">
                 <MediaHeader
                     posterUrl={getPosterUrl(show.poster_path, "w500")}
                     title={getTitle(show)}
-                    meta={<MediaMeta items={metaItems} />}
+                    meta={<DetailMeta media={show} type="tv" />}
                     actions={
                         <Button
                             icon="mdi:play"
@@ -76,6 +60,7 @@ function TvShowPage() {
                                         season: "1",
                                         episode: "1",
                                     },
+                                    search: { detailed: false },
                                 })
                             }
                         >

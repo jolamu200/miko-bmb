@@ -3,11 +3,11 @@ import {
     useMovieDetail,
     useRecommendations,
 } from "~/features/browse/browse.hooks";
+import { DetailMeta } from "~/features/browse/components/DetailMeta";
 import { MediaRow } from "~/features/browse/components/MediaRow";
 import { useTrackHistory } from "~/features/history/history.hooks";
 import { Player } from "~/features/stream/components/Player";
 import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
-import { MediaMeta } from "~/ui/MediaMeta";
 import { OverviewCard } from "~/ui/OverviewCard";
 import { PageLayout } from "~/ui/PageLayout";
 import { Skeleton } from "~/ui/Skeleton";
@@ -40,35 +40,15 @@ function MoviePage() {
         );
     }
 
-    const metaItems = [
-        movie.release_date && {
-            icon: "mdi:calendar",
-            label: new Date(movie.release_date).getFullYear().toString(),
-        },
-        movie.runtime && {
-            icon: "mdi:clock-outline",
-            label: `${movie.runtime} min`,
-        },
-        movie.vote_average && {
-            icon: "mdi:star",
-            label: movie.vote_average.toFixed(1),
-            highlight: true,
-        },
-        movie.genres?.length > 0 && {
-            icon: "mdi:tag-multiple",
-            label: movie.genres.map((g) => g.name).join(", "),
-        },
-    ].filter(Boolean) as { icon: string; label: string; highlight?: boolean }[];
-
     return (
-        <PageLayout maxWidth="md">
+        <PageLayout maxWidth="md" spacing="md">
             <Stack>
                 <div>
                     <PlayerHeader title={movie.title ?? "Movie"} backHref="/" />
                     <Player mediaType="movie" tmdbId={id} />
                 </div>
                 <OverviewCard animate>{movie.overview}</OverviewCard>
-                <MediaMeta items={metaItems} animate />
+                <DetailMeta media={movie} type="movie" />
             </Stack>
 
             {(recsLoading || (recs?.pages[0]?.results?.length ?? 0) > 0) && (

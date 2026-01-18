@@ -82,3 +82,12 @@ export function getBackdropUrl(
         return "https://placehold.co/1280x720/141414/808080?text=No+Image";
     return `https://image.tmdb.org/t/p/${size}${path}`;
 }
+
+export function getStillUrl(
+    path: string | null,
+    size: "w185" | "w300" | "original" = "w300",
+): string {
+    if (!path)
+        return "https://placehold.co/300x169/141414/808080?text=No+Image";
+    return `https://image.tmdb.org/t/p/${size}${path}`;
+}

@@ -9,10 +9,14 @@ import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/tv/$id/$season/$episode")({
     component: TvEpisodePage,
+    validateSearch: (search: Record<string, unknown>) => ({
+        detailed: search.detailed === true || search.detailed === "true",
+    }),
 });
 
 function TvEpisodePage() {
     const { id, season, episode } = Route.useParams();
+    const { detailed } = Route.useSearch();
     const seasonNum = parseInt(season, 10);
     const episodeNum = parseInt(episode, 10);
 
@@ -50,6 +54,7 @@ function TvEpisodePage() {
                     episodes={seasonData.episodes}
                     currentSeason={seasonNum}
                     currentEpisode={episodeNum}
+                    detailed={detailed}
                 />
             )}
         </PageLayout>
