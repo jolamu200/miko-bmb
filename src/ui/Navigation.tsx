@@ -107,6 +107,7 @@ export function Navigation() {
 
                 <Link
                     to="/search"
+                    search={{ q: "" }}
                     className={navItem({ active: isActive("/search") })}
                     aria-label="Search"
                 >

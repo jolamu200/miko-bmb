@@ -21,7 +21,7 @@ const styles = tv({
 });
 
 type MediaCardProps = {
-    item: MediaItem;
+    item: MediaItem & { season?: number; episode?: number };
     mediaType?: "movie" | "tv";
     onRemove?: () => void;
 };
@@ -29,7 +29,16 @@ type MediaCardProps = {
 /** Poster card for movie or TV show */
 export function MediaCard({ item, mediaType, onRemove }: MediaCardProps) {
     const type = mediaType || item.media_type || "movie";
-    const href = type === "movie" ? `/movie/${item.id}` : `/tv/${item.id}`;
+    const { season, episode } = item;
+
+    // Build URL - include season/episode for TV if available
+    const href =
+        type === "movie"
+            ? `/movie/${item.id}`
+            : season && episode
+              ? `/tv/${item.id}/${season}/${episode}`
+              : `/tv/${item.id}`;
+
     const s = styles();
     const itemTitle = getTitle(item);
     const year = getReleaseYear(item);
@@ -74,20 +83,25 @@ export function MediaCard({ item, mediaType, onRemove }: MediaCardProps) {
                             <Icon icon="mdi:close" className={s.removeIcon()} />
                         </button>
                     )}
-                    <WatchlistButton
-                        id={item.id}
-                        mediaType={type}
-                        title={itemTitle}
-                        posterPath={item.poster_path}
-                    />
+                    <WatchlistButton id={item.id} mediaType={type} />
                 </div>
 
                 <div className={s.content()}>
                     <h3 className={s.title()}>{itemTitle}</h3>
                     <div className={s.meta()}>
-                        <span>{year}</span>
-                        <span className={s.metaDot()} />
-                        <span>{type === "movie" ? "Movie" : "Series"}</span>
+                        {season && episode ? (
+                            <span>
+                                S{season} E{episode}
+                            </span>
+                        ) : (
+                            <>
+                                <span>{year}</span>
+                                <span className={s.metaDot()} />
+                                <span>
+                                    {type === "movie" ? "Movie" : "Series"}
+                                </span>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

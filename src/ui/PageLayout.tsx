@@ -11,8 +11,8 @@ const styles = tv({
             lg: { container: "max-w-7xl" },
         },
         padding: {
-            both: { container: "py-8" },
-            bottom: { container: "pb-8" },
+            default: { container: "pt-20 pb-20" },
+            none: { container: "" },
         },
         spacing: {
             none: {},
@@ -21,7 +21,7 @@ const styles = tv({
     },
     defaultVariants: {
         maxWidth: "lg",
-        padding: "both",
+        padding: "default",
         spacing: "none",
     },
 });

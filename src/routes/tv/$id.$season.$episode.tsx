@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { useSeasonDetail, useTvDetail } from "~/features/browse/hooks/useTmdb";
 import { getTitle } from "~/features/browse/types";
+import { useTrackHistory } from "~/features/history/hooks/useHistory";
 import { EpisodeSelector } from "~/features/stream/components/EpisodeSelector";
 import { Player } from "~/features/stream/components/Player";
 import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
@@ -16,13 +16,10 @@ function TvEpisodePage() {
     const seasonNum = parseInt(season, 10);
     const episodeNum = parseInt(episode, 10);
 
-    const [selectedSeason, setSelectedSeason] = useState(seasonNum);
-    const { data: show } = useTvDetail(id);
-    const { data: seasonData } = useSeasonDetail(id, selectedSeason);
+    useTrackHistory("tv", id, seasonNum, episodeNum);
 
-    useEffect(() => {
-        setSelectedSeason(seasonNum);
-    }, [seasonNum]);
+    const { data: show } = useTvDetail(id);
+    const { data: seasonData } = useSeasonDetail(id, seasonNum);
 
     const showTitle = show ? getTitle(show) : "Loading...";
     const currentEpisode = seasonData?.episodes?.find(
@@ -33,7 +30,7 @@ function TvEpisodePage() {
         : `S${seasonNum} E${episodeNum}`;
 
     return (
-        <PageLayout maxWidth="md" padding="bottom">
+        <PageLayout maxWidth="md">
             <PlayerHeader
                 title={showTitle}
                 subtitle={subtitle}
@@ -51,9 +48,8 @@ function TvEpisodePage() {
                     tvId={id}
                     seasons={show.seasons}
                     episodes={seasonData.episodes}
-                    currentSeason={selectedSeason}
+                    currentSeason={seasonNum}
                     currentEpisode={episodeNum}
-                    onSeasonChange={setSelectedSeason}
                 />
             )}
         </PageLayout>

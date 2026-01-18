@@ -1,3 +1,5 @@
+import { sValidator } from "@hono/standard-validator";
+import { type } from "arktype";
 import { Hono } from "hono";
 import { ofetch } from "ofetch";
 import { firebaseAuth } from "../lib/firebase";
@@ -12,6 +14,16 @@ import {
 type Variables = {
     uid: string;
 };
+
+// Validation schemas
+const LoginBody = type({
+    idToken: "string > 0",
+});
+
+const EmailPasswordBody = type({
+    email: "string.email",
+    password: "string >= 6",
+});
 
 const FIREBASE_AUTH_URL = "https://identitytoolkit.googleapis.com/v1";
 const GOOGLE_OAUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -30,8 +42,8 @@ function getRedirectUri(c: { req: { url: string } }) {
 
 export const authRoutes = new Hono<{ Variables: Variables }>()
     // Existing ID token login (for testing)
-    .post("/login", async (c) => {
-        const { idToken } = await c.req.json<{ idToken: string }>();
+    .post("/login", sValidator("json", LoginBody), async (c) => {
+        const { idToken } = c.req.valid("json");
 
         try {
             await firebaseAuth.verifyIdToken(idToken);
@@ -43,11 +55,8 @@ export const authRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Email/password registration
-    .post("/register", async (c) => {
-        const { email, password } = await c.req.json<{
-            email: string;
-            password: string;
-        }>();
+    .post("/register", sValidator("json", EmailPasswordBody), async (c) => {
+        const { email, password } = c.req.valid("json");
 
         try {
             const data = await ofetch<FirebaseAuthResponse>(
@@ -66,11 +75,8 @@ export const authRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Email/password login
-    .post("/login-email", async (c) => {
-        const { email, password } = await c.req.json<{
-            email: string;
-            password: string;
-        }>();
+    .post("/login-email", sValidator("json", EmailPasswordBody), async (c) => {
+        const { email, password } = c.req.valid("json");
 
         try {
             const data = await ofetch<FirebaseAuthResponse>(

@@ -1,3 +1,5 @@
+import { sValidator } from "@hono/standard-validator";
+import { type } from "arktype";
 import { Hono } from "hono";
 import { db } from "../lib/firebase";
 import { sessionMiddleware } from "../middleware/session";
@@ -13,6 +15,21 @@ type HistoryItem = {
     season?: number;
     episode?: number;
 };
+
+// Validation schemas
+const MediaType = type("'movie' | 'tv'");
+
+const AddHistoryBody = type({
+    id: "number.integer > 0",
+    mediaType: MediaType,
+    "season?": "number.integer > 0",
+    "episode?": "number.integer > 0",
+});
+
+const MediaParams = type({
+    mediaType: MediaType,
+    id: "string.digits",
+});
 
 function getHistoryRef(uid: string) {
     return db.collection("users").doc(uid).collection("history");
@@ -34,10 +51,9 @@ export const historyRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Add to history (upsert - updates watchedAt if exists)
-    .post("/", async (c) => {
+    .post("/", sValidator("json", AddHistoryBody), async (c) => {
         const uid = c.get("uid");
-        const body = await c.req.json<Omit<HistoryItem, "watchedAt">>();
-        const { id, mediaType, season, episode } = body;
+        const { id, mediaType, season, episode } = c.req.valid("json");
 
         const docId = `${mediaType}-${id}`;
         const item: HistoryItem = {
@@ -53,9 +69,9 @@ export const historyRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Remove from history
-    .delete("/:mediaType/:id", async (c) => {
+    .delete("/:mediaType/:id", sValidator("param", MediaParams), async (c) => {
         const uid = c.get("uid");
-        const { mediaType, id } = c.req.param();
+        const { mediaType, id } = c.req.valid("param");
         const docId = `${mediaType}-${id}`;
 
         await getHistoryRef(uid).doc(docId).delete();

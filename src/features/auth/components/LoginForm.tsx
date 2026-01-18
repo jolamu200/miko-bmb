@@ -9,16 +9,13 @@ import { useLogin, useRegister } from "../hooks/useAuth";
 const styles = tv({
     slots: {
         form: "space-y-4",
-        inputWrapper: "relative",
-        inputIcon:
-            "absolute left-3 top-1/2 -translate-y-1/2 text-muted size-5 pointer-events-none",
         error: "text-sm text-red-400 text-center flex items-center justify-center gap-2",
         toggle: "text-sm text-center text-muted",
         toggleButton:
             "text-accent hover:text-accent-hover hover:underline cursor-pointer transition-colors ml-1",
         passwordWrapper: "relative",
         passwordToggle:
-            "absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-all duration-200 cursor-pointer outline-none focus-visible:text-primary",
+            "absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-primary transition-all duration-200 cursor-pointer outline-none focus-visible:text-primary z-10",
     },
 });
 
@@ -30,8 +27,6 @@ type LoginFormProps = {
 export function LoginForm({ onSuccess }: LoginFormProps) {
     const {
         form,
-        inputWrapper,
-        inputIcon,
         error: errorStyle,
         toggle,
         toggleButton,
@@ -71,25 +66,21 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
 
     return (
         <form onSubmit={handleSubmit} className={form()}>
-            <div className={inputWrapper()}>
-                <Icon icon="mdi:email-outline" className={inputIcon()} />
-                <Input
-                    type="email"
-                    placeholder="Email address"
-                    value={email}
-                    onChange={setEmail}
-                />
-            </div>
+            <Input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={setEmail}
+                icon="mdi:email-outline"
+            />
             <div className={passwordWrapper()}>
-                <div className={inputWrapper()}>
-                    <Icon icon="mdi:lock-outline" className={inputIcon()} />
-                    <Input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="Password"
-                        value={password}
-                        onChange={setPassword}
-                    />
-                </div>
+                <Input
+                    type={showPassword ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={setPassword}
+                    icon="mdi:lock-outline"
+                />
                 <Toggle
                     pressed={showPassword}
                     onPressedChange={setShowPassword}
@@ -120,7 +111,7 @@ export function LoginForm({ onSuccess }: LoginFormProps) {
                 {isLoading ? (
                     <>
                         <Icon
-                            icon="mdi:loading"
+                            icon="eos-icons:loading"
                             className="size-5 animate-spin"
                         />
                         Please wait...

@@ -1,4 +1,3 @@
-import { Tabs } from "@base-ui/react/tabs";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
@@ -28,9 +27,10 @@ type EpisodeSelectorProps = {
     tvId: string;
     seasons: Season[];
     episodes: Episode[];
+    /** Current season from URL */
     currentSeason: number;
+    /** Current episode from URL */
     currentEpisode: number;
-    onSeasonChange: (season: number) => void;
 };
 
 /** Season and episode picker for TV shows */
@@ -40,7 +40,6 @@ export function EpisodeSelector({
     episodes,
     currentSeason,
     currentEpisode,
-    onSeasonChange,
 }: EpisodeSelectorProps) {
     const s = styles();
     const filteredSeasons = seasons.filter(
@@ -48,68 +47,70 @@ export function EpisodeSelector({
     );
 
     return (
-        <Tabs.Root
-            value={currentSeason}
-            onValueChange={(value) => onSeasonChange(value as number)}
-            className={s.root()}
-        >
+        <div className={s.root()}>
             <h3 className={s.sectionTitle()}>
                 <Icon icon="mdi:playlist-play" className="size-5 text-accent" />
                 Select Episode
             </h3>
 
-            <Tabs.List className={s.tabsList()}>
+            <div className={s.tabsList()}>
                 {filteredSeasons.map((season) => (
-                    <Tabs.Tab
+                    <Link
                         key={season.id}
-                        value={season.season_number}
+                        to="/tv/$id/$season/$episode"
+                        params={{
+                            id: tvId,
+                            season: String(season.season_number),
+                            episode: "1",
+                        }}
+                        resetScroll={false}
                         className={s.tab()}
+                        data-selected={
+                            season.season_number === currentSeason || undefined
+                        }
                     >
                         <Icon icon="mdi:folder-play" className="size-4" />
                         Season {season.season_number}
-                    </Tabs.Tab>
+                    </Link>
                 ))}
-            </Tabs.List>
+            </div>
 
-            {filteredSeasons.map((season) => (
-                <Tabs.Panel key={season.id} value={season.season_number}>
-                    <div className={s.grid()}>
-                        {episodes.map((ep) => (
-                            <Link
-                                key={ep.id}
-                                to="/tv/$id/$season/$episode"
-                                params={{
-                                    id: tvId,
-                                    season: String(currentSeason),
-                                    episode: String(ep.episode_number),
-                                }}
-                                className={
-                                    ep.episode_number === currentEpisode
-                                        ? s.cardActive()
-                                        : s.card()
-                                }
-                            >
-                                <div className={s.cardContent()}>
-                                    <div className={s.epInfo()}>
-                                        <span className={s.epNumber()}>
-                                            <Icon
-                                                icon="mdi:movie-play"
-                                                className="size-3.5"
-                                            />
-                                            Episode {ep.episode_number}
-                                        </span>
-                                        <p className={s.epName()}>{ep.name}</p>
-                                    </div>
+            <div className={s.grid()}>
+                {episodes.map((ep) => (
+                    <Link
+                        key={ep.id}
+                        to="/tv/$id/$season/$episode"
+                        params={{
+                            id: tvId,
+                            season: String(currentSeason),
+                            episode: String(ep.episode_number),
+                        }}
+                        resetScroll={false}
+                        className={
+                            ep.episode_number === currentEpisode
+                                ? s.cardActive()
+                                : s.card()
+                        }
+                    >
+                        <div className={s.cardContent()}>
+                            <div className={s.epInfo()}>
+                                <span className={s.epNumber()}>
                                     <Icon
-                                        icon="mdi:play-circle"
-                                        className={s.playIcon()}
+                                        icon="mdi:movie-play"
+                                        className="size-3.5"
                                     />
-                                </div>
-                            </Link>
-                        ))}
-                    </div>
-                </Tabs.Panel>
-            ))}
-        </Tabs.Root>
+                                    Episode {ep.episode_number}
+                                </span>
+                                <p className={s.epName()}>{ep.name}</p>
+                            </div>
+                            <Icon
+                                icon="mdi:play-circle"
+                                className={s.playIcon()}
+                            />
+                        </div>
+                    </Link>
+                ))}
+            </div>
+        </div>
     );
 }

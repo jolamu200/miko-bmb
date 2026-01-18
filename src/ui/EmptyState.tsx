@@ -4,7 +4,7 @@ import { tv, type VariantProps } from "tailwind-variants";
 const styles = tv({
     slots: {
         root: "text-center py-16 glass rounded-3xl animate-fade-in",
-        iconWrapper: "mx-auto mb-4",
+        iconWrapper: "flex justify-center mb-4",
         icon: "size-16 text-muted/30",
         title: "text-primary font-medium mb-2",
         subtitle: "text-sm text-muted",

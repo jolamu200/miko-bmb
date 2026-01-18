@@ -38,6 +38,42 @@ body {
     min-height: 100vh;
 }
 
+/* Prevent scrollbar layout shift */
+html {
+    overflow-y: scroll;
+    scrollbar-gutter: stable;
+}
+
+@layer base {
+    /* Dark scrollbar styling */
+    :root {
+        color-scheme: dark;
+    }
+
+    *::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+    }
+
+    *::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    *::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.15);
+        border-radius: 4px;
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+        background-color: rgba(255, 255, 255, 0.25);
+    }
+
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    }
+}
+
 @utility scrollbar-hide {
     -ms-overflow-style: none;
     scrollbar-width: none;

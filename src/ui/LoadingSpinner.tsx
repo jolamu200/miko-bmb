@@ -19,5 +19,5 @@ type LoadingSpinnerProps = VariantProps<typeof styles>;
 
 /** Animated loading spinner */
 export function LoadingSpinner({ size }: LoadingSpinnerProps) {
-    return <Icon icon="mdi:loading" className={styles({ size })} />;
+    return <Icon icon="eos-icons:loading" className={styles({ size })} />;
 }

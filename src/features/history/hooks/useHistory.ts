@@ -67,7 +67,57 @@ export function useRemoveFromHistory() {
     });
 }
 
+/** Track viewing history - call in route components with route params */
+export function useTrackHistory(
+    mediaType: "movie" | "tv",
+    id: string,
+    season?: number,
+    episode?: number,
+) {
+    const { data: user } = useUser();
+    const queryClient = useQueryClient();
+    const { mutate } = useAddToHistory();
+
+    // Use query key per unique params - staleTime: Infinity ensures queryFn
+    const params = `${mediaType}-${id}-${season}-${episode}`;
+    useQuery({
+        queryKey: ["track-history", params],
+        queryFn: () => {
+            // Skip if this exact item (same id + season + episode) already exists
+            // in history - no need to track again.
+            const history = queryClient.getQueryData<HistoryItem[]>([
+                "history",
+            ]);
+            const alreadyTracked = history?.some(
+                (h) =>
+                    h.mediaType === mediaType &&
+                    h.id === Number(id) &&
+                    h.season === season &&
+                    h.episode === episode,
+            );
+
+            if (!alreadyTracked) {
+                mutate({
+                    id: Number(id),
+                    mediaType,
+                    ...(season !== undefined && { season }),
+                    ...(episode !== undefined && { episode }),
+                });
+            }
+            return null;
+        },
+        enabled: !!user,
+        staleTime: Number.POSITIVE_INFINITY,
+        gcTime: 0,
+    });
+}
+
 const tmdbApi = ofetch.create({ baseURL: "/api/tmdb" });
+
+export type ContinueWatchingItem = MediaItem & {
+    season?: number;
+    episode?: number;
+};
 
 /** Fetch continue watching items with full TMDB details */
 export function useContinueWatching(limit = 10) {
@@ -83,15 +133,17 @@ export function useContinueWatching(limit = 10) {
     });
 
     const isLoading = queries.some((q) => q.isLoading);
-    const data: MediaItem[] = queries
+    const data: ContinueWatchingItem[] = queries
         .map((q, i) => {
             if (!q.data) return null;
             return {
                 ...q.data,
                 media_type: items[i].mediaType,
-            } as MediaItem;
+                season: items[i].season,
+                episode: items[i].episode,
+            } as ContinueWatchingItem;
         })
-        .filter((item): item is MediaItem => item !== null);
+        .filter((item): item is ContinueWatchingItem => item !== null);
 
     return { data: data.length > 0 ? data : undefined, isLoading };
 }

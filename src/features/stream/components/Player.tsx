@@ -1,7 +1,4 @@
-import { useEffect } from "react";
 import { tv } from "tailwind-variants";
-import { useUser } from "~/features/auth/hooks/useAuth";
-import { useAddToHistory } from "~/features/history/hooks/useHistory";
 import { streamer } from "../stream-lib";
 
 const styles = tv({
@@ -18,29 +15,14 @@ type PlayerProps = {
     episode?: number;
 };
 
-/** Video player wrapper for vidsrc embeds */
+/** Video player iframe wrapper */
 export function Player({ mediaType, tmdbId, season, episode }: PlayerProps) {
     const { root, iframe } = styles();
-    const { data: user } = useUser();
-    const addToHistory = useAddToHistory();
 
     const src =
         mediaType === "movie"
             ? streamer.url.movie(tmdbId)
             : streamer.url.series(tmdbId, season ?? 1, episode ?? 1);
-
-    // Track when user starts watching (intentionally only on mount)
-    // biome-ignore lint/correctness/useExhaustiveDependencies: track once on mount only
-    useEffect(() => {
-        if (!user) return;
-
-        addToHistory.mutate({
-            id: Number(tmdbId),
-            mediaType,
-            ...(season !== undefined && { season }),
-            ...(episode !== undefined && { episode }),
-        });
-    }, []);
 
     return (
         <div className={root()}>

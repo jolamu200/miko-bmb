@@ -1,3 +1,5 @@
+import { sValidator } from "@hono/standard-validator";
+import { type } from "arktype";
 import { Hono } from "hono";
 import { db } from "../lib/firebase";
 import { sessionMiddleware } from "../middleware/session";
@@ -9,10 +11,21 @@ type Variables = {
 type WatchlistItem = {
     id: number;
     mediaType: "movie" | "tv";
-    title: string;
-    posterPath: string | null;
     addedAt: number;
 };
+
+// Validation schemas
+const MediaType = type("'movie' | 'tv'");
+
+const AddWatchlistBody = type({
+    id: "number.integer > 0",
+    mediaType: MediaType,
+});
+
+const MediaParams = type({
+    mediaType: MediaType,
+    id: "string.digits",
+});
 
 function getWatchlistRef(uid: string) {
     return db.collection("users").doc(uid).collection("watchlist");
@@ -33,9 +46,9 @@ export const watchlistRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Check if item is in watchlist
-    .get("/:mediaType/:id", async (c) => {
+    .get("/:mediaType/:id", sValidator("param", MediaParams), async (c) => {
         const uid = c.get("uid");
-        const { mediaType, id } = c.req.param();
+        const { mediaType, id } = c.req.valid("param");
         const docId = `${mediaType}-${id}`;
 
         const doc = await getWatchlistRef(uid).doc(docId).get();
@@ -43,17 +56,14 @@ export const watchlistRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Add to watchlist
-    .post("/", async (c) => {
+    .post("/", sValidator("json", AddWatchlistBody), async (c) => {
         const uid = c.get("uid");
-        const { id, mediaType, title, posterPath } =
-            await c.req.json<Omit<WatchlistItem, "addedAt">>();
+        const { id, mediaType } = c.req.valid("json");
 
         const docId = `${mediaType}-${id}`;
         const item: WatchlistItem = {
             id,
             mediaType,
-            title,
-            posterPath,
             addedAt: Date.now(),
         };
 
@@ -62,9 +72,9 @@ export const watchlistRoutes = new Hono<{ Variables: Variables }>()
     })
 
     // Remove from watchlist
-    .delete("/:mediaType/:id", async (c) => {
+    .delete("/:mediaType/:id", sValidator("param", MediaParams), async (c) => {
         const uid = c.get("uid");
-        const { mediaType, id } = c.req.param();
+        const { mediaType, id } = c.req.valid("param");
         const docId = `${mediaType}-${id}`;
 
         await getWatchlistRef(uid).doc(docId).delete();

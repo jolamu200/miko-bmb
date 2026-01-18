@@ -2,8 +2,10 @@ import { Tooltip } from "@base-ui/react/tooltip";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { getPosterUrl } from "~/features/browse/types";
+import { useMovieDetail, useTvDetail } from "~/features/browse/hooks/useTmdb";
+import { getPosterUrl, getTitle } from "~/features/browse/types";
 import { posterCardStyles } from "~/ui/cardStyles";
+import { Skeleton } from "~/ui/Skeleton";
 import { useRemoveFromWatchlist } from "../hooks/useWatchlist";
 import type { WatchlistItem } from "../types";
 
@@ -28,6 +30,24 @@ type WatchlistCardProps = {
 export function WatchlistCard({ item }: WatchlistCardProps) {
     const s = styles();
     const removeFromWatchlist = useRemoveFromWatchlist();
+    const idStr = String(item.id);
+
+    const { data: movie, isLoading: movieLoading } = useMovieDetail(
+        item.mediaType === "movie" ? idStr : "",
+    );
+    const { data: tv, isLoading: tvLoading } = useTvDetail(
+        item.mediaType === "tv" ? idStr : "",
+    );
+
+    const isLoading = item.mediaType === "movie" ? movieLoading : tvLoading;
+    const detail = item.mediaType === "movie" ? movie : tv;
+
+    if (isLoading || !detail) {
+        return <Skeleton variant="video" />;
+    }
+
+    const title = getTitle(detail);
+    const posterPath = detail.poster_path;
     const href =
         item.mediaType === "movie" ? `/movie/${item.id}` : `/tv/${item.id}`;
 
@@ -35,8 +55,8 @@ export function WatchlistCard({ item }: WatchlistCardProps) {
         <div className={s.card()}>
             <Link to={href} className={s.imageWrapper()}>
                 <img
-                    src={getPosterUrl(item.posterPath)}
-                    alt={item.title}
+                    src={getPosterUrl(posterPath)}
+                    alt={title}
                     className={s.poster()}
                     loading="lazy"
                 />
@@ -60,7 +80,7 @@ export function WatchlistCard({ item }: WatchlistCardProps) {
                 </div>
 
                 <div className={s.content()}>
-                    <p className={s.title()}>{item.title}</p>
+                    <p className={s.title()}>{title}</p>
                     <p className={s.meta()}>
                         <Icon
                             icon="mdi:bookmark-check"

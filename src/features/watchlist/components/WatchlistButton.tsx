@@ -32,17 +32,10 @@ const styles = tv({
 type WatchlistButtonProps = {
     id: number;
     mediaType: "movie" | "tv";
-    title: string;
-    posterPath: string | null;
 };
 
 /** Button to add/remove item from watchlist */
-export function WatchlistButton({
-    id,
-    mediaType,
-    title,
-    posterPath,
-}: WatchlistButtonProps) {
+export function WatchlistButton({ id, mediaType }: WatchlistButtonProps) {
     const { data: user } = useUser();
     const { inWatchlist } = useInWatchlist(mediaType, id);
     const addToWatchlist = useAddToWatchlist();
@@ -64,7 +57,7 @@ export function WatchlistButton({
         if (inWatchlist) {
             removeFromWatchlist.mutate({ mediaType, id });
         } else {
-            addToWatchlist.mutate({ id, mediaType, title, posterPath });
+            addToWatchlist.mutate({ id, mediaType });
         }
     }
 
