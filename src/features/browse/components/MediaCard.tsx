@@ -13,10 +13,10 @@ const styles = tv({
         ratingIcon: "text-accent",
         ratingValue: "text-primary",
         actions:
-            "absolute bottom-16 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0",
+            "absolute top-3 right-3 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-all duration-300 -translate-y-1 group-hover:translate-y-0",
         removeButton:
-            "p-2.5 rounded-full bg-black/50 text-muted hover:text-red-400 hover:bg-black/70 ring-1 ring-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95",
-        removeIcon: "size-5",
+            "p-2 rounded-full bg-black/60 text-muted hover:text-red-400 hover:bg-black/80 ring-1 ring-white/10 backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95",
+        removeIcon: "size-4",
     },
 });
 

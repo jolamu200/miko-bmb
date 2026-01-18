@@ -28,10 +28,13 @@ function MoviePage() {
     const { overview, meta, metaItem, recommendations } = styles();
     const { id } = Route.useParams();
     const { data: movie, isLoading } = useMovieDetail(id);
-    const { data: recs, isLoading: recsLoading } = useRecommendations(
-        "movie",
-        id,
-    );
+    const {
+        data: recs,
+        isLoading: recsLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useRecommendations("movie", id);
 
     if (isLoading || !movie) {
         return (
@@ -45,12 +48,7 @@ function MoviePage() {
     return (
         <PageLayout maxWidth="md" padding="bottom">
             <PlayerHeader title={movie.title ?? "Movie"} backHref="/" />
-            <Player
-                mediaType="movie"
-                tmdbId={id}
-                title={movie.title ?? "Movie"}
-                posterPath={movie.poster_path}
-            />
+            <Player mediaType="movie" tmdbId={id} />
             <p className={overview()}>{movie.overview}</p>
             <div className={meta()}>
                 {movie.release_date && (
@@ -79,13 +77,15 @@ function MoviePage() {
                 )}
             </div>
 
-            {(recsLoading || (recs?.results && recs.results.length > 0)) && (
+            {(recsLoading || (recs?.pages[0]?.results?.length ?? 0) > 0) && (
                 <div className={recommendations()}>
                     <MediaRow
                         title="More Like This"
-                        items={recs?.results}
-                        isLoading={recsLoading}
+                        items={recs?.pages.flatMap((p) => p.results)}
+                        isLoading={recsLoading || isFetchingNextPage}
                         mediaType="movie"
+                        onLoadMore={fetchNextPage}
+                        hasMore={hasNextPage}
                     />
                 </div>
             )}

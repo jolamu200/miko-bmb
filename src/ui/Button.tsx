@@ -6,7 +6,7 @@ const button = tv({
     variants: {
         variant: {
             primary:
-                "bg-gradient-to-r from-accent to-yellow-600 text-surface hover:shadow-xl hover:shadow-accent/30 hover:brightness-110",
+                "bg-linear-to-r from-accent to-yellow-600 text-surface hover:shadow-xl hover:shadow-accent/30 hover:brightness-110",
             secondary:
                 "glass text-primary hover:bg-white/8 hover:border-white/12 border border-white/6",
             ghost: "bg-transparent text-muted hover:text-primary hover:bg-white/4",

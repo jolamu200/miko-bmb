@@ -10,7 +10,7 @@ const styles = tv({
         sectionTitle:
             "text-lg font-semibold text-primary flex items-center gap-2 mb-4",
         tabsList: "flex gap-2 overflow-x-auto pb-3 scrollbar-hide",
-        tab: "px-4 py-2.5 rounded-button text-sm font-medium transition-all duration-300 whitespace-nowrap flex items-center gap-2 glass text-muted hover:text-primary hover:bg-white/6 data-[selected]:bg-gradient-to-r data-[selected]:from-accent data-[selected]:to-yellow-600 data-[selected]:text-surface data-[selected]:shadow-lg data-[selected]:shadow-accent/25",
+        tab: "px-4 py-2.5 rounded-button text-sm font-medium transition-all duration-300 whitespace-nowrap flex items-center gap-2 glass text-muted hover:text-primary hover:bg-white/6 data-selected:bg-linear-to-r data-selected:from-accent data-selected:to-yellow-600 data-selected:text-surface data-selected:shadow-lg data-selected:shadow-accent/25",
         grid: "grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4",
         card: "glass rounded-card p-4 transition-all duration-300 group cursor-pointer hover:bg-white/6 hover:ring-1 hover:ring-white/10",
         cardActive:

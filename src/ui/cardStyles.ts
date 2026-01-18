@@ -6,9 +6,9 @@ export const posterCardStyles = tv({
         card: "group relative overflow-hidden rounded-3xl bg-surface-raised ring-1 ring-white/5 transition-all duration-500 hover:ring-accent/50 hover:shadow-2xl hover:shadow-accent/20",
         imageWrapper: "relative aspect-2/3 overflow-hidden rounded-3xl",
         poster: "absolute inset-0 w-full h-full object-cover transition-transform duration-400 group-hover:scale-110",
-        shine: "absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
+        shine: "absolute inset-0 bg-linear-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none",
         gradientOverlay:
-            "absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent opacity-80",
+            "absolute inset-0 bg-linear-to-t from-black via-black/20 to-transparent opacity-80",
         playButton:
             "absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-14 rounded-full bg-white/95 flex items-center justify-center opacity-0 group-hover:opacity-100 scale-75 group-hover:scale-100 transition-all duration-400 shadow-2xl",
         playIcon: "size-6 ml-0.5 text-black",

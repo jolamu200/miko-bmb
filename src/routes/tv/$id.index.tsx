@@ -22,11 +22,11 @@ const styles = tv({
         page: "min-h-screen text-primary",
         backdrop: "relative h-64 md:h-96 bg-cover bg-center",
         gradient:
-            "absolute inset-0 bg-gradient-to-t from-surface via-surface/80 to-surface/20",
+            "absolute inset-0 bg-linear-to-t from-surface via-surface/80 to-surface/20",
         container:
             "max-w-5xl mx-auto px-4 pb-8 -mt-32 relative z-10 animate-fade-up",
         header: "flex gap-6",
-        poster: "w-32 md:w-48 rounded-card shadow-2xl ring-1 ring-white/10 flex-shrink-0 hover:scale-105 transition-transform duration-500",
+        poster: "w-32 md:w-48 rounded-card shadow-2xl ring-1 ring-white/10 shrink-0 hover:scale-105 transition-transform duration-500",
         info: "flex flex-col justify-end",
         title: "text-2xl md:text-3xl font-bold",
         meta: "flex flex-wrap gap-4 mt-3 text-sm text-muted",
@@ -38,7 +38,7 @@ const styles = tv({
         seasonCard:
             "group bg-surface-raised rounded-card overflow-hidden ring-1 ring-white/5 hover:ring-accent/40 hover:shadow-xl hover:shadow-accent/15 transition-all duration-400 cursor-pointer hover:scale-[1.02]",
         seasonPoster:
-            "w-full aspect-[2/3] object-cover transition-transform duration-500 group-hover:scale-105",
+            "w-full aspect-2/3 object-cover transition-transform duration-500 group-hover:scale-105",
         seasonInfo: "p-4 text-left",
         seasonName: "font-medium text-sm",
         seasonMeta: "text-xs text-muted mt-1 flex items-center gap-1",
@@ -71,7 +71,13 @@ function TvShowPage() {
     const { id } = Route.useParams();
     const navigate = useNavigate();
     const { data: show, isLoading } = useTvDetail(id);
-    const { data: recs, isLoading: recsLoading } = useRecommendations("tv", id);
+    const {
+        data: recs,
+        isLoading: recsLoading,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+    } = useRecommendations("tv", id);
 
     if (isLoading || !show) {
         return <div className={page()} />;
@@ -124,7 +130,7 @@ function TvShowPage() {
                                     icon="mdi:star"
                                     className="size-4 text-accent"
                                 />
-                                {show.vote_average.toFixed(1)}
+                                {show.vote_average?.toFixed(1) ?? "N/A"}
                             </span>
                         </div>
                         <div className="mt-5">
@@ -193,13 +199,15 @@ function TvShowPage() {
                 </div>
 
                 {(recsLoading ||
-                    (recs?.results && recs.results.length > 0)) && (
+                    (recs?.pages[0]?.results?.length ?? 0) > 0) && (
                     <div className={recommendations()}>
                         <MediaRow
                             title="More Like This"
-                            items={recs?.results}
-                            isLoading={recsLoading}
+                            items={recs?.pages.flatMap((p) => p.results)}
+                            isLoading={recsLoading || isFetchingNextPage}
                             mediaType="tv"
+                            onLoadMore={fetchNextPage}
+                            hasMore={hasNextPage}
                         />
                     </div>
                 )}

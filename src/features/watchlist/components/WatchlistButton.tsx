@@ -10,15 +10,15 @@ import {
 
 const styles = tv({
     slots: {
-        button: "p-2.5 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95",
-        icon: "size-5 transition-transform duration-300",
+        button: "p-2 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110 active:scale-95",
+        icon: "size-4 transition-transform duration-300",
         tooltip:
             "px-2.5 py-1.5 text-xs font-medium bg-neutral-900 text-primary rounded-button shadow-xl shadow-black/60 border border-white/10 animate-fade-in",
     },
     variants: {
         inWatchlist: {
             true: {
-                button: "bg-gradient-to-br from-accent to-yellow-600 text-surface shadow-lg shadow-accent/30",
+                button: "bg-linear-to-br from-accent to-yellow-600 text-surface shadow-lg shadow-accent/30",
                 icon: "animate-icon-bounce",
             },
             false: {

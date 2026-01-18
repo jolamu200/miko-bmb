@@ -9,8 +9,6 @@ type Variables = {
 type HistoryItem = {
     id: number;
     mediaType: "movie" | "tv";
-    title: string;
-    posterPath: string | null;
     watchedAt: number;
     season?: number;
     episode?: number;
@@ -39,14 +37,12 @@ export const historyRoutes = new Hono<{ Variables: Variables }>()
     .post("/", async (c) => {
         const uid = c.get("uid");
         const body = await c.req.json<Omit<HistoryItem, "watchedAt">>();
-        const { id, mediaType, title, posterPath, season, episode } = body;
+        const { id, mediaType, season, episode } = body;
 
         const docId = `${mediaType}-${id}`;
         const item: HistoryItem = {
             id,
             mediaType,
-            title,
-            posterPath,
             watchedAt: Date.now(),
             ...(season !== undefined && { season }),
             ...(episode !== undefined && { episode }),

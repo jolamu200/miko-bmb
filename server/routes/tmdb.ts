@@ -33,11 +33,17 @@ export const tmdbRoutes = new Hono()
     })
     .get("/movie/:id/recommendations", async (c) => {
         const { id } = c.req.param();
-        return c.json(await tmdb(`/movie/${id}/recommendations`));
+        const page = c.req.query("page") || "1";
+        return c.json(
+            await tmdb(`/movie/${id}/recommendations`, { query: { page } }),
+        );
     })
     .get("/tv/:id/recommendations", async (c) => {
         const { id } = c.req.param();
-        return c.json(await tmdb(`/tv/${id}/recommendations`));
+        const page = c.req.query("page") || "1";
+        return c.json(
+            await tmdb(`/tv/${id}/recommendations`, { query: { page } }),
+        );
     })
     .get("/discover/:mediaType", async (c) => {
         const { mediaType } = c.req.param();

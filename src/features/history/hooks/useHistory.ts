@@ -1,6 +1,12 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+    useMutation,
+    useQueries,
+    useQuery,
+    useQueryClient,
+} from "@tanstack/react-query";
 import { ofetch } from "ofetch";
 import { useUser } from "~/features/auth/hooks/useAuth";
+import type { MediaItem } from "~/features/browse/types";
 import type { HistoryItem } from "../types";
 
 const api = ofetch.create({ baseURL: "/api/history" });
@@ -59,4 +65,33 @@ export function useRemoveFromHistory() {
             );
         },
     });
+}
+
+const tmdbApi = ofetch.create({ baseURL: "/api/tmdb" });
+
+/** Fetch continue watching items with full TMDB details */
+export function useContinueWatching(limit = 10) {
+    const { data: history } = useHistory();
+    const items = history?.slice(0, limit) ?? [];
+
+    const queries = useQueries({
+        queries: items.map((item) => ({
+            queryKey: ["tmdb", item.mediaType, String(item.id)],
+            queryFn: () => tmdbApi<MediaItem>(`/${item.mediaType}/${item.id}`),
+            staleTime: 1000 * 60 * 30,
+        })),
+    });
+
+    const isLoading = queries.some((q) => q.isLoading);
+    const data: MediaItem[] = queries
+        .map((q, i) => {
+            if (!q.data) return null;
+            return {
+                ...q.data,
+                media_type: items[i].mediaType,
+            } as MediaItem;
+        })
+        .filter((item): item is MediaItem => item !== null);
+
+    return { data: data.length > 0 ? data : undefined, isLoading };
 }

@@ -1,54 +1,69 @@
 import { Menu } from "@base-ui/react/menu";
 import { Icon } from "@iconify/react";
-import { Link } from "@tanstack/react-router";
+import { Link, useLocation } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
 import { useLogout, useUser } from "~/features/auth/hooks/useAuth";
+import { useIsMobile } from "~/hooks/useIsMobile";
 
 const styles = tv({
     slots: {
-        nav: "fixed top-0 left-0 right-0 z-50 glass-strong animate-fade-in",
-        container:
-            "max-w-7xl mx-auto px-6 h-16 flex items-center justify-between",
-        logo: "text-xl font-bold bg-gradient-to-r from-accent via-yellow-200 to-accent bg-clip-text text-transparent flex items-center gap-2 hover:opacity-80 transition-opacity duration-300",
-        logoIcon: "size-6 text-accent",
-        links: "flex items-center gap-5",
-        link: "text-muted hover:text-primary transition-all duration-300 flex items-center gap-2 text-sm group relative py-2",
-        linkIcon:
-            "size-5 transition-transform duration-300 group-hover:scale-110",
-        linkUnderline:
-            "absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-accent to-transparent transition-all duration-300 group-hover:w-full",
+        wrapper: "fixed z-50 left-1/2 -translate-x-1/2",
+        nav: "glass-strong rounded-full px-2 py-2 flex items-center gap-1 shadow-xl shadow-black/30 ring-1 ring-white/10",
+        logo: "flex items-center gap-1.5 px-3 py-2 rounded-full text-sm font-bold bg-linear-to-r from-accent via-yellow-200 to-accent bg-clip-text text-transparent transition-all duration-300 hover:opacity-80",
+        logoIcon: "size-5 text-accent",
+        navItem:
+            "relative flex items-center gap-2 px-4 py-2.5 rounded-full text-sm font-medium transition-all duration-300",
+        navItemIcon: "size-5",
         userButton:
-            "size-10 rounded-full bg-gradient-to-br from-accent/90 to-yellow-600 flex items-center justify-center text-surface font-semibold overflow-hidden ring-2 ring-white/5 hover:ring-accent/40 transition-all duration-300 cursor-pointer hover:scale-105 shadow-lg shadow-accent/20",
+            "size-9 rounded-full bg-linear-to-br from-accent/90 to-yellow-600 flex items-center justify-center text-surface font-semibold text-sm overflow-hidden ring-2 ring-white/10 hover:ring-accent/40 transition-all duration-300 cursor-pointer",
         avatar: "size-full object-cover",
         dropdown:
-            "w-64 bg-surface/98 backdrop-blur-2xl border border-white/8 rounded-card shadow-2xl shadow-black/70 overflow-hidden origin-top-right transition-all duration-200 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0",
+            "w-64 bg-surface/98 backdrop-blur-2xl border border-white/8 rounded-card shadow-2xl shadow-black/70 overflow-hidden origin-top-right transition-all duration-200 data-ending-style:scale-95 data-ending-style:opacity-0 data-starting-style:scale-95 data-starting-style:opacity-0",
         dropdownHeader: "p-4 border-b border-white/6 bg-white/2",
         dropdownUserInfo: "flex items-center gap-3",
         dropdownAvatar:
-            "size-11 rounded-full bg-gradient-to-br from-accent to-yellow-600 flex items-center justify-center text-surface font-semibold text-sm overflow-hidden ring-2 ring-white/10",
+            "size-11 rounded-full bg-linear-to-br from-accent to-yellow-600 flex items-center justify-center text-surface font-semibold text-sm overflow-hidden ring-2 ring-white/10",
         dropdownAvatarImg: "size-full object-cover",
         dropdownDetails: "flex-1 min-w-0",
         dropdownName: "text-sm font-semibold text-primary truncate",
         dropdownEmail: "text-xs text-muted truncate mt-0.5",
         dropdownMenu: "p-2 space-y-1",
         dropdownItem:
-            "w-full px-3 py-2.5 text-left text-sm text-muted data-[highlighted]:bg-white/6 data-[highlighted]:text-primary transition-all duration-200 rounded-button flex items-center gap-3 cursor-pointer outline-none",
+            "w-full px-3 py-2.5 text-left text-sm text-muted data-highlighted:bg-white/6 data-highlighted:text-primary transition-all duration-200 rounded-button flex items-center gap-3 cursor-pointer outline-none",
         dropdownItemIcon:
-            "size-5 transition-transform duration-200 group-data-[highlighted]:scale-110",
+            "size-5 transition-transform duration-200 group-data-highlighted:scale-110",
+    },
+    variants: {
+        active: {
+            true: {
+                navItem: "bg-white/10 text-primary",
+            },
+            false: {
+                navItem: "text-muted hover:text-primary hover:bg-white/5",
+            },
+        },
+        position: {
+            top: {
+                wrapper: "top-6",
+            },
+            bottom: {
+                wrapper: "bottom-4",
+            },
+        },
     },
 });
 
-/** Top navigation bar */
+/** Centered pill navigation bar */
 export function Navigation() {
+    const isMobile = useIsMobile();
+
     const {
+        wrapper,
         nav,
-        container,
         logo,
         logoIcon,
-        links,
-        link,
-        linkIcon,
-        linkUnderline,
+        navItem,
+        navItemIcon,
         userButton,
         avatar,
         dropdown,
@@ -66,150 +81,149 @@ export function Navigation() {
 
     const { data: user, isLoading } = useUser();
     const logout = useLogout();
+    const location = useLocation();
 
     const initials =
         user?.displayName?.charAt(0) || user?.email?.charAt(0) || "?";
 
+    const isActive = (path: string) => location.pathname === path;
+
     return (
-        <nav className={nav()}>
-            <div className={container()}>
-                <Link to="/" className={logo()}>
+        <div className={wrapper({ position: isMobile ? "bottom" : "top" })}>
+            <nav className={nav()}>
+                <Link to="/" className={logo()} aria-label="Miko">
                     <Icon icon="mdi:play-circle" className={logoIcon()} />
                     Miko
                 </Link>
-                <div className={links()}>
-                    <Link to="/" className={link()}>
-                        <Icon icon="mdi:home-variant" className={linkIcon()} />
-                        Home
-                        <span className={linkUnderline()} />
+
+                <Link
+                    to="/"
+                    className={navItem({ active: isActive("/") })}
+                    aria-label="Home"
+                >
+                    <Icon icon="mdi:home-variant" className={navItemIcon()} />
+                    {!isMobile && "Home"}
+                </Link>
+
+                <Link
+                    to="/search"
+                    className={navItem({ active: isActive("/search") })}
+                    aria-label="Search"
+                >
+                    <Icon icon="mdi:magnify" className={navItemIcon()} />
+                    {!isMobile && "Search"}
+                </Link>
+
+                {user && (
+                    <Link
+                        to="/watchlist"
+                        className={navItem({ active: isActive("/watchlist") })}
+                        aria-label="Watchlist"
+                    >
+                        <Icon
+                            icon="mdi:bookmark-multiple"
+                            className={navItemIcon()}
+                        />
+                        {!isMobile && "Watchlist"}
                     </Link>
+                )}
 
-                    <Link to="/search" className={link()}>
-                        <Icon icon="mdi:magnify" className={linkIcon()} />
-                        Search
-                        <span className={linkUnderline()} />
+                {!isLoading && !user && (
+                    <Link
+                        to="/login"
+                        className={navItem({ active: isActive("/login") })}
+                        aria-label="Sign In"
+                    >
+                        <Icon
+                            icon="mdi:login-variant"
+                            className={navItemIcon()}
+                        />
+                        {!isMobile && "Sign In"}
                     </Link>
+                )}
 
-                    {user && (
-                        <Link to="/watchlist" className={link()}>
-                            <Icon
-                                icon="mdi:bookmark-multiple"
-                                className={linkIcon()}
-                            />
-                            Watchlist
-                            <span className={linkUnderline()} />
-                        </Link>
-                    )}
-
-                    {!isLoading && !user && (
-                        <Link to="/login" className={link()}>
-                            <Icon
-                                icon="mdi:login-variant"
-                                className={linkIcon()}
-                            />
-                            Sign In
-                            <span className={linkUnderline()} />
-                        </Link>
-                    )}
-
-                    {user && (
-                        <Menu.Root>
-                            <Menu.Trigger
-                                className={userButton()}
-                                aria-label="User menu"
-                            >
-                                {user.photoURL ? (
-                                    <img
-                                        src={user.photoURL}
-                                        alt=""
-                                        className={avatar()}
-                                    />
-                                ) : (
-                                    initials.toUpperCase()
-                                )}
-                            </Menu.Trigger>
-                            <Menu.Portal>
-                                <Menu.Positioner align="end" sideOffset={12}>
-                                    <Menu.Popup className={dropdown()}>
-                                        <div className={dropdownHeader()}>
-                                            <div className={dropdownUserInfo()}>
-                                                <div
-                                                    className={dropdownAvatar()}
-                                                >
-                                                    {user.photoURL ? (
-                                                        <img
-                                                            src={user.photoURL}
-                                                            alt=""
-                                                            className={dropdownAvatarImg()}
-                                                        />
-                                                    ) : (
-                                                        initials.toUpperCase()
-                                                    )}
-                                                </div>
-                                                <div
-                                                    className={dropdownDetails()}
-                                                >
-                                                    <p
-                                                        className={dropdownName()}
-                                                    >
-                                                        {user.displayName ||
-                                                            "User"}
-                                                    </p>
-                                                    <p
-                                                        className={dropdownEmail()}
-                                                    >
-                                                        {user.email}
-                                                    </p>
-                                                </div>
+                {user && (
+                    <Menu.Root>
+                        <Menu.Trigger
+                            className={userButton()}
+                            aria-label="User menu"
+                        >
+                            {user.photoURL ? (
+                                <img
+                                    src={user.photoURL}
+                                    alt=""
+                                    className={avatar()}
+                                />
+                            ) : (
+                                initials.toUpperCase()
+                            )}
+                        </Menu.Trigger>
+                        <Menu.Portal>
+                            <Menu.Positioner align="end" sideOffset={12}>
+                                <Menu.Popup className={dropdown()}>
+                                    <div className={dropdownHeader()}>
+                                        <div className={dropdownUserInfo()}>
+                                            <div className={dropdownAvatar()}>
+                                                {user.photoURL ? (
+                                                    <img
+                                                        src={user.photoURL}
+                                                        alt=""
+                                                        className={dropdownAvatarImg()}
+                                                    />
+                                                ) : (
+                                                    initials.toUpperCase()
+                                                )}
+                                            </div>
+                                            <div className={dropdownDetails()}>
+                                                <p className={dropdownName()}>
+                                                    {user.displayName || "User"}
+                                                </p>
+                                                <p className={dropdownEmail()}>
+                                                    {user.email}
+                                                </p>
                                             </div>
                                         </div>
-                                        <Menu.Group className={dropdownMenu()}>
-                                            <Menu.Item
-                                                className={dropdownItem()}
-                                            >
-                                                <Icon
-                                                    icon="mdi:account-circle"
-                                                    className={dropdownItemIcon()}
-                                                />
-                                                Profile
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                className={dropdownItem()}
-                                            >
-                                                <Icon
-                                                    icon="mdi:cog"
-                                                    className={dropdownItemIcon()}
-                                                />
-                                                Settings
-                                            </Menu.Item>
-                                            <Menu.Item
-                                                className={dropdownItem()}
-                                            >
-                                                <Icon
-                                                    icon="mdi:history"
-                                                    className={dropdownItemIcon()}
-                                                />
-                                                Watch History
-                                            </Menu.Item>
-                                            <div className="h-px bg-white/6 my-1" />
-                                            <Menu.Item
-                                                className={dropdownItem()}
-                                                onClick={() => logout.mutate()}
-                                            >
-                                                <Icon
-                                                    icon="mdi:logout-variant"
-                                                    className={dropdownItemIcon()}
-                                                />
-                                                Sign Out
-                                            </Menu.Item>
-                                        </Menu.Group>
-                                    </Menu.Popup>
-                                </Menu.Positioner>
-                            </Menu.Portal>
-                        </Menu.Root>
-                    )}
-                </div>
-            </div>
-        </nav>
+                                    </div>
+                                    <Menu.Group className={dropdownMenu()}>
+                                        <Menu.Item className={dropdownItem()}>
+                                            <Icon
+                                                icon="mdi:account-circle"
+                                                className={dropdownItemIcon()}
+                                            />
+                                            Profile
+                                        </Menu.Item>
+                                        <Menu.Item className={dropdownItem()}>
+                                            <Icon
+                                                icon="mdi:cog"
+                                                className={dropdownItemIcon()}
+                                            />
+                                            Settings
+                                        </Menu.Item>
+                                        <Menu.Item className={dropdownItem()}>
+                                            <Icon
+                                                icon="mdi:history"
+                                                className={dropdownItemIcon()}
+                                            />
+                                            Watch History
+                                        </Menu.Item>
+                                        <div className="h-px bg-white/6 my-1" />
+                                        <Menu.Item
+                                            className={dropdownItem()}
+                                            onClick={() => logout.mutate()}
+                                        >
+                                            <Icon
+                                                icon="mdi:logout-variant"
+                                                className={dropdownItemIcon()}
+                                            />
+                                            Sign Out
+                                        </Menu.Item>
+                                    </Menu.Group>
+                                </Menu.Popup>
+                            </Menu.Positioner>
+                        </Menu.Portal>
+                    </Menu.Root>
+                )}
+            </nav>
+        </div>
     );
 }

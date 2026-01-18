@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import { useEffect, useRef } from "react";
 import { tv } from "tailwind-variants";
 import { Skeleton } from "~/ui/Skeleton";
 import type { MediaItem } from "../types";
@@ -24,6 +25,8 @@ type MediaRowProps = {
     isLoading?: boolean;
     mediaType?: "movie" | "tv";
     onRemove?: (item: MediaItem) => void;
+    onLoadMore?: () => void;
+    hasMore?: boolean;
 };
 
 /** Gets an appropriate icon for a row title */
@@ -55,9 +58,27 @@ export function MediaRow({
     isLoading,
     mediaType,
     onRemove,
+    onLoadMore,
+    hasMore,
 }: MediaRowProps) {
     const { root, header, titleWrapper, titleIcon, title, scroll, item } =
         styles();
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el || !onLoadMore || !hasMore) return;
+
+        const handleScroll = () => {
+            const { scrollLeft, scrollWidth, clientWidth } = el;
+            if (scrollWidth - scrollLeft - clientWidth < 200) {
+                onLoadMore();
+            }
+        };
+
+        el.addEventListener("scroll", handleScroll, { passive: true });
+        return () => el.removeEventListener("scroll", handleScroll);
+    }, [onLoadMore, hasMore]);
 
     return (
         <section className={root()}>
@@ -67,7 +88,7 @@ export function MediaRow({
                     <h2 className={title()}>{rowTitle}</h2>
                 </div>
             </div>
-            <div className={scroll()}>
+            <div ref={scrollRef} className={scroll()}>
                 {isLoading
                     ? Array.from({ length: 8 }).map((_, i) => (
                           // biome-ignore lint/suspicious/noArrayIndexKey: this is fine.

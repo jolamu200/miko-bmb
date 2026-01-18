@@ -8,7 +8,7 @@ import {
 } from "~/features/browse/hooks/useTmdb";
 import { useForYou } from "~/features/history/hooks/useForYou";
 import {
-    useHistory,
+    useContinueWatching,
     useRemoveFromHistory,
 } from "~/features/history/hooks/useHistory";
 import { PageLayout } from "~/ui/PageLayout";
@@ -19,34 +19,23 @@ export const Route = createFileRoute("/")({
 
 function HomePage() {
     const { data: user } = useUser();
-    const { data: history } = useHistory();
+    const { data: continueWatching, isLoading: continueWatchingLoading } =
+        useContinueWatching();
     const { data: forYouItems, isLoading: forYouLoading } = useForYou();
     const removeFromHistory = useRemoveFromHistory();
     const trending = useTrending("all", "day");
     const popularMovies = usePopularMovies();
     const topRatedTv = useTopRatedTv();
 
-    // Convert history items to MediaItem format for MediaRow
-    const continueWatchingItems = history?.slice(0, 10).map((item) => ({
-        id: item.id,
-        title: item.mediaType === "movie" ? item.title : undefined,
-        name: item.mediaType === "tv" ? item.title : undefined,
-        poster_path: item.posterPath,
-        backdrop_path: null,
-        overview: "",
-        vote_average: 0,
-        media_type: item.mediaType as "movie" | "tv",
-        genre_ids: [],
-    }));
-
     return (
         <PageLayout spacing="md">
             {user &&
-                continueWatchingItems &&
-                continueWatchingItems.length > 0 && (
+                (continueWatchingLoading ||
+                    (continueWatching && continueWatching.length > 0)) && (
                     <MediaRow
                         title="Continue Watching"
-                        items={continueWatchingItems}
+                        items={continueWatching}
+                        isLoading={continueWatchingLoading}
                         onRemove={(item) =>
                             removeFromHistory.mutate({
                                 mediaType: item.media_type ?? "movie",

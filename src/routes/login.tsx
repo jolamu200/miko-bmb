@@ -15,7 +15,7 @@ const styles = tv({
         card: "w-full max-w-sm glass-strong rounded-card p-8 space-y-6 animate-scale-in shadow-2xl shadow-black/50",
         header: "text-center space-y-2",
         logoIcon: "size-12 text-accent mx-auto mb-2",
-        title: "text-2xl font-bold bg-gradient-to-r from-accent via-yellow-200 to-accent bg-clip-text text-transparent",
+        title: "text-2xl font-bold bg-linear-to-r from-accent via-yellow-200 to-accent bg-clip-text text-transparent",
         subtitle: "text-sm text-muted",
         divider: "flex items-center gap-4",
         dividerLine: "flex-1 h-px bg-white/8",

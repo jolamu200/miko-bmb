@@ -14,21 +14,12 @@ const styles = tv({
 type PlayerProps = {
     mediaType: "movie" | "tv";
     tmdbId: string;
-    title: string;
-    posterPath: string | null;
     season?: number;
     episode?: number;
 };
 
 /** Video player wrapper for vidsrc embeds */
-export function Player({
-    mediaType,
-    tmdbId,
-    title,
-    posterPath,
-    season,
-    episode,
-}: PlayerProps) {
+export function Player({ mediaType, tmdbId, season, episode }: PlayerProps) {
     const { root, iframe } = styles();
     const { data: user } = useUser();
     const addToHistory = useAddToHistory();
@@ -46,8 +37,6 @@ export function Player({
         addToHistory.mutate({
             id: Number(tmdbId),
             mediaType,
-            title,
-            posterPath,
             ...(season !== undefined && { season }),
             ...(episode !== undefined && { episode }),
         });

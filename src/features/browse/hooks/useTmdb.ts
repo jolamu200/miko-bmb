@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
 import type {
     MediaItem,
@@ -92,12 +92,18 @@ export function useSearch(query: string) {
 }
 
 export function useRecommendations(mediaType: "movie" | "tv", id: string) {
-    return useQuery({
+    return useInfiniteQuery({
         queryKey: ["tmdb", mediaType, id, "recommendations"],
-        queryFn: () =>
+        queryFn: ({ pageParam }) =>
             api<TmdbListResponse<MediaItem>>(
                 `/${mediaType}/${id}/recommendations`,
+                { query: { page: pageParam } },
             ),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) =>
+            lastPage.page < lastPage.total_pages
+                ? lastPage.page + 1
+                : undefined,
         enabled: !!id,
         staleTime: STALE_TIME.list,
     });

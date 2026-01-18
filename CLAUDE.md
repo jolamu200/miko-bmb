@@ -13,7 +13,7 @@
 - **No forwardRef** - `ref` is a regular prop
 - **No displayName** 
 - **No manual memo** - React Compiler handles it → verify: grep `React.memo`, `useMemo`, `useCallback`
-- **Tailwind v4 syntax** - use `text-(--color)` not `text-[var(--color)]`
+- **Tailwind v4 syntax** - use `text-(--color)` not `text-(--color)`
 
 ### Component Patterns
 
