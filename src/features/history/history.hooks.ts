@@ -5,9 +5,9 @@ import {
     useQueryClient,
 } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
-import { useUser } from "~/features/auth/hooks/useAuth";
+import { useUser } from "~/features/auth/auth.hooks";
 import type { MediaItem } from "~/features/browse/types";
-import type { HistoryItem } from "../types";
+import type { HistoryItem } from "./types";
 
 const api = ofetch.create({ baseURL: "/api/history" });
 

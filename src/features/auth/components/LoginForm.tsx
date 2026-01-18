@@ -4,7 +4,7 @@ import { useState } from "react";
 import { tv } from "tailwind-variants";
 import { Button } from "~/ui/Button";
 import { Input } from "~/ui/Input";
-import { useLogin, useRegister } from "../hooks/useAuth";
+import { useLogin, useRegister } from "../auth.hooks";
 
 const styles = tv({
     slots: {

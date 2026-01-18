@@ -1,12 +1,12 @@
 import { Tooltip } from "@base-ui/react/tooltip";
 import { Icon } from "@iconify/react";
 import { tv } from "tailwind-variants";
-import { useUser } from "~/features/auth/hooks/useAuth";
+import { useUser } from "~/features/auth/auth.hooks";
 import {
     useAddToWatchlist,
     useInWatchlist,
     useRemoveFromWatchlist,
-} from "../hooks/useWatchlist";
+} from "../watchlist.hooks";
 
 const styles = tv({
     slots: {

@@ -2,7 +2,7 @@ import { Menu } from "@base-ui/react/menu";
 import { Icon } from "@iconify/react";
 import { Link, useLocation } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { useLogout, useUser } from "~/features/auth/hooks/useAuth";
+import { useLogout, useUser } from "~/features/auth/auth.hooks";
 import { useIsMobile } from "~/hooks/useIsMobile";
 
 const styles = tv({

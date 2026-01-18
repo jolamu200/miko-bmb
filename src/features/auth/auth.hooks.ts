@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
-import type { LoginCredentials, User } from "../types";
+import type { LoginCredentials, User } from "./types";
 
 const api = ofetch.create({ baseURL: "/api/auth" });
 

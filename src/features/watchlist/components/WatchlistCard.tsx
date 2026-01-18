@@ -2,12 +2,12 @@ import { Tooltip } from "@base-ui/react/tooltip";
 import { Icon } from "@iconify/react";
 import { Link } from "@tanstack/react-router";
 import { tv } from "tailwind-variants";
-import { useMovieDetail, useTvDetail } from "~/features/browse/hooks/useTmdb";
+import { useMovieDetail, useTvDetail } from "~/features/browse/browse.hooks";
 import { getPosterUrl, getTitle } from "~/features/browse/types";
 import { posterCardStyles } from "~/ui/cardStyles";
 import { Skeleton } from "~/ui/Skeleton";
-import { useRemoveFromWatchlist } from "../hooks/useWatchlist";
 import type { WatchlistItem } from "../types";
+import { useRemoveFromWatchlist } from "../watchlist.hooks";
 
 const styles = tv({
     extend: posterCardStyles,

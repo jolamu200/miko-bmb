@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
-import { useUser } from "~/features/auth/hooks/useAuth";
-import type { WatchlistItem } from "../types";
+import { useUser } from "~/features/auth/auth.hooks";
+import type { WatchlistItem } from "./types";
 
 const api = ofetch.create({ baseURL: "/api/watchlist" });
 

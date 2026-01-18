@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useUser } from "~/features/auth/hooks/useAuth";
+import { useUser } from "~/features/auth/auth.hooks";
 import { MediaRow } from "~/features/browse/components/MediaRow";
 import {
     useContinueWatching,
     useRemoveFromHistory,
-} from "~/features/history/hooks/useHistory";
+} from "~/features/history/history.hooks";
 import { WatchlistCard } from "~/features/watchlist/components/WatchlistCard";
-import { useWatchlist } from "~/features/watchlist/hooks/useWatchlist";
 import type { WatchlistItem } from "~/features/watchlist/types";
+import { useWatchlist } from "~/features/watchlist/watchlist.hooks";
 import { CardGrid } from "~/ui/CardGrid";
 import { EmptyState } from "~/ui/EmptyState";
 import { PageLayout } from "~/ui/PageLayout";

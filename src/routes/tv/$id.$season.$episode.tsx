@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useSeasonDetail, useTvDetail } from "~/features/browse/hooks/useTmdb";
+import { useSeasonDetail, useTvDetail } from "~/features/browse/browse.hooks";
 import { getTitle } from "~/features/browse/types";
-import { useTrackHistory } from "~/features/history/hooks/useHistory";
+import { useTrackHistory } from "~/features/history/history.hooks";
 import { EpisodeSelector } from "~/features/stream/components/EpisodeSelector";
 import { Player } from "~/features/stream/components/Player";
 import { PlayerHeader } from "~/features/stream/components/PlayerHeader";

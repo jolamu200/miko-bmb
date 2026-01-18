@@ -1,10 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { MediaRow } from "~/features/browse/components/MediaRow";
-import { SeasonCard } from "~/features/browse/components/SeasonCard";
 import {
     useRecommendations,
     useTvDetail,
-} from "~/features/browse/hooks/useTmdb";
+} from "~/features/browse/browse.hooks";
+import { MediaRow } from "~/features/browse/components/MediaRow";
+import { SeasonCard } from "~/features/browse/components/SeasonCard";
 import {
     getBackdropUrl,
     getPosterUrl,

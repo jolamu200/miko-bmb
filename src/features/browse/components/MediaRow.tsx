@@ -1,6 +1,7 @@
 import { Icon } from "@iconify/react";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { tv } from "tailwind-variants";
+import { useInfiniteScroll } from "~/hooks/useInfiniteScroll";
 import { Skeleton } from "~/ui/Skeleton";
 import type { MediaItem } from "../types";
 import { MediaCard } from "./MediaCard";
@@ -23,6 +24,7 @@ type MediaRowProps = {
     title: string;
     items: MediaItem[] | undefined;
     isLoading?: boolean;
+    isFetchingMore?: boolean;
     mediaType?: "movie" | "tv";
     onRemove?: (item: MediaItem) => void;
     onLoadMore?: () => void;
@@ -56,6 +58,7 @@ export function MediaRow({
     title: rowTitle,
     items,
     isLoading,
+    isFetchingMore,
     mediaType,
     onRemove,
     onLoadMore,
@@ -65,20 +68,13 @@ export function MediaRow({
         styles();
     const scrollRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el || !onLoadMore || !hasMore) return;
-
-        const handleScroll = () => {
-            const { scrollLeft, scrollWidth, clientWidth } = el;
-            if (scrollWidth - scrollLeft - clientWidth < 200) {
-                onLoadMore();
-            }
-        };
-
-        el.addEventListener("scroll", handleScroll, { passive: true });
-        return () => el.removeEventListener("scroll", handleScroll);
-    }, [onLoadMore, hasMore]);
+    const sentinelRef = useInfiniteScroll({
+        onLoadMore: onLoadMore ?? (() => {}),
+        hasMore: !!hasMore,
+        isLoading: isFetchingMore,
+        rootMargin: "0px 200px 0px 0px",
+        rootRef: scrollRef,
+    });
 
     return (
         <section className={root()}>
@@ -109,6 +105,11 @@ export function MediaRow({
                               />
                           </div>
                       ))}
+                {hasMore && (
+                    <div ref={sentinelRef} className={item()}>
+                        {isFetchingMore && <Skeleton variant="card" />}
+                    </div>
+                )}
             </div>
         </section>
     );

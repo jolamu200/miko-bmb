@@ -1,10 +1,10 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MediaRow } from "~/features/browse/components/MediaRow";
 import {
     useMovieDetail,
     useRecommendations,
-} from "~/features/browse/hooks/useTmdb";
-import { useTrackHistory } from "~/features/history/hooks/useHistory";
+} from "~/features/browse/browse.hooks";
+import { MediaRow } from "~/features/browse/components/MediaRow";
+import { useTrackHistory } from "~/features/history/history.hooks";
 import { Player } from "~/features/stream/components/Player";
 import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
 import { MediaMeta } from "~/ui/MediaMeta";

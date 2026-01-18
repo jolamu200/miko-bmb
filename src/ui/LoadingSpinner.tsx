@@ -2,7 +2,7 @@ import { Icon } from "@iconify/react";
 import { tv, type VariantProps } from "tailwind-variants";
 
 const styles = tv({
-    base: "animate-spin text-muted",
+    base: "text-muted",
     variants: {
         size: {
             sm: "size-5",
@@ -19,5 +19,7 @@ type LoadingSpinnerProps = VariantProps<typeof styles>;
 
 /** Animated loading spinner */
 export function LoadingSpinner({ size }: LoadingSpinnerProps) {
-    return <Icon icon="eos-icons:loading" className={styles({ size })} />;
+    return (
+        <Icon icon="svg-spinners:ring-resize" className={styles({ size })} />
+    );
 }

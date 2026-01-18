@@ -1,12 +1,13 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { ofetch } from "ofetch";
+import { getNextPage } from "~/utils/pagination";
 import type {
     MediaItem,
     MovieDetail,
     SeasonDetail,
     TmdbListResponse,
     TvDetail,
-} from "../types";
+} from "./types";
 
 const api = ofetch.create({ baseURL: "/api/tmdb" });
 
@@ -81,13 +82,16 @@ export function useSeasonDetail(tvId: string, seasonNumber: number) {
 }
 
 export function useSearch(query: string) {
-    return useQuery({
+    return useInfiniteQuery({
         queryKey: ["tmdb", "search", query],
-        queryFn: () =>
+        queryFn: ({ pageParam }) =>
             api<TmdbListResponse<MediaItem>>("/search/multi", {
-                query: { query },
+                query: { query, page: pageParam },
             }),
+        initialPageParam: 1,
+        getNextPageParam: getNextPage,
         enabled: query.length >= 2,
+        staleTime: STALE_TIME.list,
     });
 }
 
@@ -100,10 +104,7 @@ export function useRecommendations(mediaType: "movie" | "tv", id: string) {
                 { query: { page: pageParam } },
             ),
         initialPageParam: 1,
-        getNextPageParam: (lastPage) =>
-            lastPage.page < lastPage.total_pages
-                ? lastPage.page + 1
-                : undefined,
+        getNextPageParam: getNextPage,
         enabled: !!id,
         staleTime: STALE_TIME.list,
     });
