@@ -76,4 +76,18 @@ export const historyRoutes = new Hono<{ Variables: Variables }>()
 
         await getHistoryRef(uid).doc(docId).delete();
         return c.json({ ok: true });
+    })
+
+    // Clear entire history
+    .delete("/", async (c) => {
+        const uid = c.get("uid");
+        const snapshot = await getHistoryRef(uid).get();
+
+        const batch = db.batch();
+        for (const doc of snapshot.docs) {
+            batch.delete(doc.ref);
+        }
+        await batch.commit();
+
+        return c.json({ ok: true });
     });

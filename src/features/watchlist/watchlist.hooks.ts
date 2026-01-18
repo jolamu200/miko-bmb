@@ -65,3 +65,15 @@ export function useRemoveFromWatchlist() {
         },
     });
 }
+
+/** Clear entire watchlist */
+export function useClearWatchlist() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => api("/", { method: "DELETE" }),
+        onSuccess: () => {
+            queryClient.setQueryData<WatchlistItem[]>(["watchlist"], []);
+        },
+    });
+}

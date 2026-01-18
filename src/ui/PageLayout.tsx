@@ -2,11 +2,12 @@ import { tv, type VariantProps } from "tailwind-variants";
 
 const styles = tv({
     slots: {
-        page: "min-h-screen text-primary",
+        page: "min-h-screen text-primary mt-5",
         container: "mx-auto px-4 sm:px-6",
     },
     variants: {
         maxWidth: {
+            sm: { container: "max-w-xl" },
             md: { container: "max-w-5xl" },
             lg: { container: "max-w-7xl" },
         },

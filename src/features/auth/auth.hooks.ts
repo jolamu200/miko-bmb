@@ -58,3 +58,16 @@ export function useLogout() {
         },
     });
 }
+
+/** Update user profile */
+export function useUpdateProfile() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: (data: { displayName?: string; photoURL?: string }) =>
+            api<User>("/profile", { method: "PATCH", body: data }),
+        onSuccess: (updatedUser) => {
+            queryClient.setQueryData(["auth", "user"], updatedUser);
+        },
+    });
+}

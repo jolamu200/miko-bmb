@@ -166,6 +166,37 @@ export const authRoutes = new Hono<{ Variables: Variables }>()
         });
     })
 
+    // Update profile
+    .patch(
+        "/profile",
+        sessionMiddleware,
+        sValidator(
+            "json",
+            type({
+                "displayName?": "string",
+                "photoURL?": "string",
+            }),
+        ),
+        async (c) => {
+            const uid = c.get("uid") as string;
+            const { displayName, photoURL } = c.req.valid("json");
+
+            const updates: { displayName?: string; photoURL?: string } = {};
+            if (displayName !== undefined) updates.displayName = displayName;
+            if (photoURL !== undefined) updates.photoURL = photoURL;
+
+            await firebaseAuth.updateUser(uid, updates);
+            const user = await firebaseAuth.getUser(uid);
+
+            return c.json({
+                uid,
+                email: user.email,
+                displayName: user.displayName,
+                photoURL: user.photoURL,
+            });
+        },
+    )
+
     // Logout
     .post("/logout", (c) => {
         clearSession(c);

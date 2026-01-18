@@ -2,10 +2,15 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { AuthCard } from "~/features/auth/components/AuthCard";
 import { GoogleButton } from "~/features/auth/components/GoogleButton";
 import { LoginForm } from "~/features/auth/components/LoginForm";
+import { GuestGuard } from "~/ui/AuthGuard";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/login")({
-    component: LoginPage,
+    component: () => (
+        <GuestGuard>
+            <LoginPage />
+        </GuestGuard>
+    ),
 });
 
 function LoginPage() {

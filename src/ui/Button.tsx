@@ -37,6 +37,7 @@ type ButtonProps = ButtonVariants & {
     children: React.ReactNode;
     icon?: string;
     disabled?: boolean;
+    loading?: boolean;
     type?: "button" | "submit";
     onClick?: () => void;
 };
@@ -48,18 +49,21 @@ export function Button({
     children,
     icon,
     disabled,
+    loading,
     type = "button",
     onClick,
 }: ButtonProps) {
     const s = styles({ variant, size });
+    const displayIcon = loading ? "eos-icons:loading" : icon;
+
     return (
         <BaseButton
             type={type}
             className={s.button()}
-            disabled={disabled}
+            disabled={disabled || loading}
             onClick={onClick}
         >
-            {icon && <Icon icon={icon} className={s.icon()} />}
+            {displayIcon && <Icon icon={displayIcon} className={s.icon()} />}
             {children}
         </BaseButton>
     );

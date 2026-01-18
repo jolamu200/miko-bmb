@@ -67,6 +67,18 @@ export function useRemoveFromHistory() {
     });
 }
 
+/** Clear entire watch history */
+export function useClearHistory() {
+    const queryClient = useQueryClient();
+
+    return useMutation({
+        mutationFn: () => api("/", { method: "DELETE" }),
+        onSuccess: () => {
+            queryClient.setQueryData<HistoryItem[]>(["history"], []);
+        },
+    });
+}
+
 /** Track viewing history - call in route components with route params */
 export function useTrackHistory(
     mediaType: "movie" | "tv",

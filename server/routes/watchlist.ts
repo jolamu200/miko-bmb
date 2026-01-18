@@ -79,4 +79,18 @@ export const watchlistRoutes = new Hono<{ Variables: Variables }>()
 
         await getWatchlistRef(uid).doc(docId).delete();
         return c.json({ ok: true });
+    })
+
+    // Clear entire watchlist
+    .delete("/", async (c) => {
+        const uid = c.get("uid");
+        const snapshot = await getWatchlistRef(uid).get();
+
+        const batch = db.batch();
+        for (const doc of snapshot.docs) {
+            batch.delete(doc.ref);
+        }
+        await batch.commit();
+
+        return c.json({ ok: true });
     });

@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useUser } from "~/features/auth/auth.hooks";
 import { MediaRow } from "~/features/browse/components/MediaRow";
 import {
     useContinueWatching,
@@ -8,103 +7,85 @@ import {
 import { WatchlistCard } from "~/features/watchlist/components/WatchlistCard";
 import type { WatchlistItem } from "~/features/watchlist/types";
 import { useWatchlist } from "~/features/watchlist/watchlist.hooks";
+import { AuthGuard } from "~/ui/AuthGuard";
 import { CardGrid } from "~/ui/CardGrid";
 import { EmptyState } from "~/ui/EmptyState";
 import { PageLayout } from "~/ui/PageLayout";
 import { SectionHeader } from "~/ui/SectionHeader";
-import { TextLink } from "~/ui/TextLink";
 
 export const Route = createFileRoute("/watchlist")({
-    component: WatchlistPage,
+    component: () => (
+        <AuthGuard>
+            <WatchlistPage />
+        </AuthGuard>
+    ),
 });
 
-function WatchlistPage() {
-    const { data: user, isLoading: userLoading } = useUser();
-    const { data: items, isLoading } = useWatchlist();
-    const { data: continueWatching, isLoading: continueWatchingLoading } =
-        useContinueWatching();
+function ContinueWatchingSection() {
+    const { data: continueWatching, isLoading } = useContinueWatching();
     const removeFromHistory = useRemoveFromHistory();
+
+    if (!isLoading && (!continueWatching || continueWatching.length === 0)) {
+        return null;
+    }
+
+    return (
+        <MediaRow
+            title="Continue Watching"
+            items={continueWatching}
+            isLoading={isLoading}
+            onRemove={(item) =>
+                removeFromHistory.mutate({
+                    mediaType: item.media_type ?? "movie",
+                    id: item.id,
+                })
+            }
+        />
+    );
+}
+
+function WatchlistSection() {
+    const { data: items, isLoading } = useWatchlist();
 
     const countInfo = items?.length
         ? `(${items.length} ${items.length === 1 ? "title" : "titles"})`
         : undefined;
 
-    if (userLoading) {
-        return (
-            <PageLayout>
-                <SectionHeader
-                    icon="mdi:bookmark-multiple"
-                    title="My Watchlist"
-                />
+    return (
+        <section>
+            <SectionHeader
+                icon="mdi:bookmark-multiple"
+                title="My Watchlist"
+                info={countInfo}
+            />
+
+            {isLoading ? (
                 <EmptyState icon="eos-icons:loading" title="Loading..." />
-            </PageLayout>
-        );
-    }
-
-    if (!user) {
-        return (
-            <PageLayout>
-                <SectionHeader
-                    icon="mdi:bookmark-multiple"
-                    title="My Watchlist"
-                />
+            ) : !items?.length ? (
                 <EmptyState
-                    icon="mdi:account-lock"
-                    title="Sign in to access your watchlist"
-                    subtitle="Save movies and shows to watch later"
-                    action={
-                        <TextLink to="/login" icon="mdi:login">
-                            Sign In
-                        </TextLink>
-                    }
+                    icon="mdi:bookmark-off-outline"
+                    title="Your watchlist is empty"
+                    subtitle="Browse and add some titles to get started!"
                 />
-            </PageLayout>
-        );
-    }
+            ) : (
+                <CardGrid>
+                    {items.map((item: WatchlistItem) => (
+                        <WatchlistCard
+                            key={`${item.mediaType}-${item.id}`}
+                            item={item}
+                        />
+                    ))}
+                </CardGrid>
+            )}
+        </section>
+    );
+}
 
+function WatchlistPage() {
     return (
         <PageLayout spacing="md">
-            {(continueWatchingLoading ||
-                (continueWatching && continueWatching.length > 0)) && (
-                <MediaRow
-                    title="Continue Watching"
-                    items={continueWatching}
-                    isLoading={continueWatchingLoading}
-                    onRemove={(item) =>
-                        removeFromHistory.mutate({
-                            mediaType: item.media_type ?? "movie",
-                            id: item.id,
-                        })
-                    }
-                />
-            )}
-
-            <section>
-                <SectionHeader
-                    icon="mdi:bookmark-multiple"
-                    title="My Watchlist"
-                    info={countInfo}
-                />
-
-                {isLoading ? (
-                    <EmptyState icon="eos-icons:loading" title="Loading..." />
-                ) : !items?.length ? (
-                    <EmptyState
-                        icon="mdi:bookmark-off-outline"
-                        title="Your watchlist is empty"
-                        subtitle="Browse and add some titles to get started!"
-                    />
-                ) : (
-                    <CardGrid>
-                        {items.map((item: WatchlistItem) => (
-                            <WatchlistCard
-                                key={`${item.mediaType}-${item.id}`}
-                                item={item}
-                            />
-                        ))}
-                    </CardGrid>
-                )}
-            </section>
+            <ContinueWatchingSection />
+            <WatchlistSection />
         </PageLayout>
     );
 }
