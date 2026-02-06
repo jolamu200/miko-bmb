@@ -47,7 +47,9 @@ function MoviePage() {
                     <PlayerHeader title={movie.title ?? "Movie"} backHref="/" />
                     <Player mediaType="movie" tmdbId={id} />
                 </div>
-                <OverviewCard animate>{movie.overview}</OverviewCard>
+                <OverviewCard windowTitle={movie.title as string} animate>
+                    {movie.overview}
+                </OverviewCard>
                 <DetailMeta media={movie} type="movie" />
             </Stack>
 

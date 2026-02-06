@@ -60,7 +60,6 @@ function TvShowPage() {
                                         season: "1",
                                         episode: "1",
                                     },
-                                    search: { detailed: false },
                                 })
                             }
                         >
@@ -69,7 +68,9 @@ function TvShowPage() {
                     }
                 />
 
-                <OverviewCard>{show.overview}</OverviewCard>
+                <OverviewCard windowTitle={show.name as string}>
+                    {show.overview}
+                </OverviewCard>
 
                 <SectionHeader
                     icon="mdi:folder-play"

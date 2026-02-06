@@ -5,18 +5,15 @@ import { useTrackHistory } from "~/features/history/history.hooks";
 import { EpisodeSelector } from "~/features/stream/components/EpisodeSelector";
 import { Player } from "~/features/stream/components/Player";
 import { PlayerHeader } from "~/features/stream/components/PlayerHeader";
+import { OverviewCard } from "~/ui/OverviewCard";
 import { PageLayout } from "~/ui/PageLayout";
 
 export const Route = createFileRoute("/tv/$id/$season/$episode")({
     component: TvEpisodePage,
-    validateSearch: (search: Record<string, unknown>) => ({
-        detailed: search.detailed === true || search.detailed === "true",
-    }),
 });
 
 function TvEpisodePage() {
     const { id, season, episode } = Route.useParams();
-    const { detailed } = Route.useSearch();
     const seasonNum = parseInt(season, 10);
     const episodeNum = parseInt(episode, 10);
 
@@ -47,6 +44,14 @@ function TvEpisodePage() {
                 episode={episodeNum}
             />
 
+            {currentEpisode?.overview && (
+                <OverviewCard
+                    windowTitle={`${show?.name} | ${currentEpisode.name}`}
+                >
+                    {currentEpisode.overview}
+                </OverviewCard>
+            )}
+
             {show?.seasons && seasonData?.episodes && (
                 <EpisodeSelector
                     tvId={id}
@@ -54,7 +59,6 @@ function TvEpisodePage() {
                     episodes={seasonData.episodes}
                     currentSeason={seasonNum}
                     currentEpisode={episodeNum}
-                    detailed={detailed}
                 />
             )}
         </PageLayout>

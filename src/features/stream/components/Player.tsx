@@ -1,5 +1,4 @@
 import { tv } from "tailwind-variants";
-import { streamer } from "../stream-lib";
 
 const styles = tv({
     slots: {
@@ -21,8 +20,8 @@ export function Player({ mediaType, tmdbId, season, episode }: PlayerProps) {
 
     const src =
         mediaType === "movie"
-            ? streamer.url.movie(tmdbId)
-            : streamer.url.series(tmdbId, season ?? 1, episode ?? 1);
+            ? `https://vidsrc-embed.ru/embed/movie?tmdb=${tmdbId}`
+            : `https://vidsrc-embed.ru/embed/tv?tmdb=${tmdbId}&season=${season}&episode=${episode}`;
 
     return (
         <div className={root()}>

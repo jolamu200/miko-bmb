@@ -39,7 +39,6 @@ export function SeasonCard({
                 season: String(seasonNumber),
                 episode: "1",
             }}
-            search={{ detailed: false }}
             className={s.card()}
         >
             <img
